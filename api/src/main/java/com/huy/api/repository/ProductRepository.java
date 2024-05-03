@@ -1,4 +1,4 @@
-package com.huy.api.dao;
+package com.huy.api.repository;
 
 import com.huy.api.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;

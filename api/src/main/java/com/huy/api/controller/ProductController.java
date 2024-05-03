@@ -1,8 +1,7 @@
 package com.huy.api.controller;
 
-import com.huy.api.dao.ProductRepository;
 import com.huy.api.dto.ProductDto;
-import com.huy.api.mapper.ProductMapper;
+import com.huy.api.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,19 +13,15 @@ import java.util.List;
 @RequestMapping("/api/products")
 public class ProductController {
 
-    private final ProductRepository productRepository;
+    private final ProductService productService;
 
-    public ProductController(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+    public ProductController(ProductService productService) {
+        this.productService = productService;
     }
+
 
     @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts() {
-        List<ProductDto> productDtos = productRepository.findAll()
-                .stream()
-                .map(ProductMapper::toProductDto)
-                .toList();
-
-        return ResponseEntity.ok(productDtos);
+        return ResponseEntity.ok(productService.findAll());
     }
 }

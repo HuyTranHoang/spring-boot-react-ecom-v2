@@ -1,9 +1,10 @@
 package com.huy.api.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class ProductDto {
     private long id;

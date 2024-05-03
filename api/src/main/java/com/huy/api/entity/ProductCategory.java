@@ -2,6 +2,7 @@ package com.huy.api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.util.List;
 import java.util.Objects;
@@ -12,18 +13,19 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "product_category")
 public class ProductCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
     @Column(name = "category_name")
-    private String categoryName;
+    String categoryName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "category")
-    private List<Product> products;
+    List<Product> products;
 
     @Override
     public String toString() {
