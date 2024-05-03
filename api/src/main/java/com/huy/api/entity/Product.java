@@ -15,35 +15,36 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    long id;
 
-    private String name;
+    String name;
 
-    private String description;
+    String description;
 
     @Column(name = "unit_price")
-    private double unitPrice;
+    double unitPrice;
 
     @Column(name = "image_url")
-    private String imageUrl;
+    String imageUrl;
 
     @Column(name = "units_in_stock")
-    private int unitsInStock;
+    int unitsInStock;
 
-    private String brand;
+    String brand;
 
     @Column(name = "date_created")
     @CreationTimestamp
-    private Date dateCreated;
+    Date dateCreated;
 
     @Column(name = "last_updated")
     @UpdateTimestamp
-    private Date lastUpdated;
+    Date lastUpdated;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

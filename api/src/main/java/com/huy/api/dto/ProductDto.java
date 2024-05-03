@@ -1,25 +1,29 @@
 package com.huy.api.dto;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProductDto {
-    private long id;
+    long id;
 
-    private String name;
+    String name;
 
-    private String description;
+    String description;
 
-    private double unitPrice;
+    double unitPrice;
 
-    private String imageUrl;
+    String imageUrl;
 
-    private int unitsInStock;
+    int unitsInStock;
 
-    private String brand;
+    String brand;
 
-    private String categoryName;
+    String categoryName;
 }
