@@ -1,10 +1,5 @@
-package com.huy.api.service.impl;
+package com.huy.api.product;
 
-import com.huy.api.dto.ProductDto;
-import com.huy.api.entity.Product;
-import com.huy.api.mapper.ProductMapper;
-import com.huy.api.repository.ProductRepository;
-import com.huy.api.service.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

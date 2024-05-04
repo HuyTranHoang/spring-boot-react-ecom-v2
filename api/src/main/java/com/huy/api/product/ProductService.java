@@ -1,6 +1,4 @@
-package com.huy.api.service;
-
-import com.huy.api.dto.ProductDto;
+package com.huy.api.product;
 
 import java.util.List;
 

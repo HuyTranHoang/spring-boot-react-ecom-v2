@@ -1,9 +1,9 @@
-package com.huy.api.entity;
+package com.huy.api.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.huy.api.category.ProductCategory;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,36 +15,35 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    private long id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
     @Column(name = "unit_price")
-    double unitPrice;
+    private double unitPrice;
 
     @Column(name = "image_url")
-    String imageUrl;
+    private String imageUrl;
 
     @Column(name = "units_in_stock")
-    int unitsInStock;
+    private int unitsInStock;
 
-    String brand;
+    private String brand;
 
     @Column(name = "date_created")
     @CreationTimestamp
-    Date dateCreated;
+    private Date dateCreated;
 
     @Column(name = "last_updated")
     @UpdateTimestamp
-    Date lastUpdated;
+    private Date lastUpdated;
 
     @ManyToOne
     @JoinColumn(name = "category_id")

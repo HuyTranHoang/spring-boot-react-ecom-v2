@@ -1,6 +1,5 @@
-package com.huy.api.repository;
+package com.huy.api.product;
 
-import com.huy.api.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {

@@ -1,9 +1,8 @@
-package com.huy.api.controller;
+package com.huy.api.product;
 
-import com.huy.api.dto.ProductDto;
-import com.huy.api.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,8 +19,19 @@ public class ProductController {
     }
 
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<ProductDto>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductDto> getProductById(@PathVariable long id) {
+        ProductDto productDto = productService.findById(id);
+
+        if (productDto == null) {
+            throw new RuntimeException("Product not found");
+        }
+
+        return ResponseEntity.ok(productDto);
     }
 }

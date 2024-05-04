@@ -1,6 +1,4 @@
-package com.huy.api.mapper;
-import com.huy.api.dto.ProductDto;
-import com.huy.api.entity.Product;
+package com.huy.api.product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
