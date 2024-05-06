@@ -1,5 +1,7 @@
 package com.huy.api.product;
 
+import com.huy.api.product.dto.ProductDto;
+import com.huy.api.product.mapper.ProductMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,9 +32,17 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void save(ProductDto product) {
+    public Product save(ProductDto product) {
         Product productEntity = productMapper.toProduct(product);
-        productRepository.save(productEntity);
+        return productRepository.save(productEntity);
+    }
+
+    @Override
+    public Product update(Long id, ProductDto productDto) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Product not found"));
+        productMapper.updateProductFromDto(productDto, product);
+        return productRepository.save(product);
     }
 
     @Override

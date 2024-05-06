@@ -1,15 +1,14 @@
 package com.huy.api.product;
 
+import com.huy.api.product.dto.ProductDto;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/products/")
 public class ProductController {
 
     private final ProductService productService;
@@ -19,12 +18,12 @@ public class ProductController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<ProductDto>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<ProductDto> getProductById(@PathVariable long id) {
         ProductDto productDto = productService.findById(id);
 
@@ -33,5 +32,23 @@ public class ProductController {
         }
 
         return ResponseEntity.ok(productDto);
+    }
+
+    @PostMapping()
+    public ResponseEntity<Product> saveProduct(@RequestBody ProductDto productDto) {
+        Product savedProduct = productService.save(productDto);
+        URI uri = URI.create("/api/products/" + savedProduct.getId());
+        return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable long id, @RequestBody ProductDto productDto) {
+        return ResponseEntity.ok(productService.update(id, productDto));
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable long id) {
+        productService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

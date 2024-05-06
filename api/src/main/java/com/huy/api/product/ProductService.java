@@ -1,5 +1,7 @@
 package com.huy.api.product;
 
+import com.huy.api.product.dto.ProductDto;
+
 import java.util.List;
 
 public interface ProductService {
@@ -7,7 +9,9 @@ public interface ProductService {
 
     ProductDto findById(Long id);
 
-    void save(ProductDto product);
+    Product save(ProductDto product);
+
+    Product update(Long id, ProductDto productDto);
 
     void deleteById(Long id);
 }

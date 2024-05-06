@@ -15,7 +15,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "category")
-public class ProductCategory {
+public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -39,7 +39,7 @@ public class ProductCategory {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ProductCategory that = (ProductCategory) o;
+        Category that = (Category) o;
         return id == that.id && Objects.equals(categoryName, that.categoryName) && Objects.equals(products, that.products);
     }
 

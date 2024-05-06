@@ -1,12 +1,10 @@
-package com.huy.api.product;
+package com.huy.api.product.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 public class ProductDto {
     private long id;
 
@@ -21,6 +19,8 @@ public class ProductDto {
     private int unitsInStock;
 
     private String brand;
+
+    private long categoryId;
 
     private String categoryName;
 }

@@ -1,7 +1,7 @@
 package com.huy.api.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.huy.api.category.ProductCategory;
+import com.huy.api.category.Category;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -48,7 +48,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonIgnore
-    private ProductCategory category;
+    private Category category;
 
     @Override
     public String toString() {
