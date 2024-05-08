@@ -18,7 +18,7 @@ public class ProductController {
     }
 
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ProductDto>> getProducts() {
         return ResponseEntity.ok(productService.findAll());
     }
@@ -34,7 +34,7 @@ public class ProductController {
         return ResponseEntity.ok(productDto);
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<Product> saveProduct(@RequestBody ProductDto productDto) {
         Product savedProduct = productService.save(productDto);
         URI uri = URI.create("/api/products/" + savedProduct.getId());

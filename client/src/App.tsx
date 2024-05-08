@@ -1,31 +1,34 @@
-const products = [
-  {
-    id: 1,
-    name: 'Product 1',
-    price: 100
-  },
-  {
-    id: 2,
-    name: 'Product 2',
-    price: 200
-  },
-  {
-    id: 3,
-    name: 'Product 3',
-    price: 300
-  }
-]
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Product from './features/type/Product.ts'
+import Catalog from './features/catalog/Catalog.tsx'
+import BasicNavBar from './ui/BasicNavBar.tsx'
+import Container from 'react-bootstrap/Container'
 
 function App() {
+  const [products, setProducts] = useState<Product[]>([])
+
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const res = await axios.get<Product[]>('/api/products/')
+        const data = res.data
+        setProducts(data)
+      } catch (err) {
+        alert('Failed to fetch products')
+      }
+    }
+
+    fetchProducts()
+  }, [])
+
   return (
-    <div className='h-screen bg-stone-100'>
-      {products.map((product) => (
-        <div key={product.id} className='rounded-md bg-white p-4 shadow-md'>
-          <h2 className='text-lg font-semibold'>{product.name}</h2>
-          <p className='text-gray-500'>${product.price}</p>
-        </div>
-      ))}
-    </div>
+    <>
+      <BasicNavBar />
+      <Container>
+        {products.map((product) => <Catalog key={product.id} product={product} />)}
+      </Container>
+    </>
   )
 }
 
