@@ -2,6 +2,7 @@ package com.huy.api.product.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -23,4 +24,6 @@ public class ProductDto {
     private long categoryId;
 
     private String categoryName;
+
+    private MultipartFile file;
 }

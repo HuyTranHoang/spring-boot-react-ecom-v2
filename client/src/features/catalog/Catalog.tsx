@@ -1,15 +1,16 @@
-import Product from '../type/Product.ts'
+import Product from '../../type/Product.ts'
+import { List } from '@mui/material'
+import CatalogItem from './CatalogItem.tsx'
 
 type CatalogProps = {
-  product: Product
+  products: Product[]
 }
 
-function Catalog({ product }: CatalogProps) {
+function Catalog({ products }: CatalogProps) {
   return (
-    <>
-      <div>{product.name} - {product.categoryName} - {product.unitPrice}</div>
-      <hr />
-    </>
+    <List>
+      {products.map((product) => <CatalogItem product={product} key={product.id} />)}
+    </List>
   )
 }
 
