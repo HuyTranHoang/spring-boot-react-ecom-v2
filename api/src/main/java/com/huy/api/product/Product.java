@@ -32,8 +32,8 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "units_in_stock")
-    private int unitsInStock;
+    @Column(name = "unit_in_stock")
+    private int unitInStock;
 
     private String brand;
 
@@ -50,6 +50,20 @@ public class Product {
     @JsonIgnore
     private Category category;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Product product = (Product) o;
+        return id == product.id && Double.compare(unitPrice, product.unitPrice) == 0 && unitInStock == product.unitInStock && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(brand, product.brand) && Objects.equals(dateCreated, product.dateCreated) && Objects.equals(lastUpdated, product.lastUpdated) && Objects.equals(category, product.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, unitPrice, imageUrl, unitInStock, brand, dateCreated, lastUpdated, category);
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -58,24 +72,11 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", unitPrice=" + unitPrice +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", unitsInStock=" + unitsInStock +
+                ", unitInStock=" + unitInStock +
                 ", brand='" + brand + '\'' +
                 ", dateCreated=" + dateCreated +
                 ", lastUpdated=" + lastUpdated +
                 ", category=" + category +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Product product = (Product) o;
-        return id == product.id && Double.compare(unitPrice, product.unitPrice) == 0 && unitsInStock == product.unitsInStock && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(imageUrl, product.imageUrl) && Objects.equals(brand, product.brand) && Objects.equals(dateCreated, product.dateCreated) && Objects.equals(lastUpdated, product.lastUpdated) && Objects.equals(category, product.category);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, unitPrice, imageUrl, unitsInStock, brand, dateCreated, lastUpdated, category);
     }
 }

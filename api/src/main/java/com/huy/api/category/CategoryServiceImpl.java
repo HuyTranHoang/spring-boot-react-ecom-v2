@@ -30,4 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toDto)
                 .orElse(null);
     }
+
+    @Override
+    public CategoryDto getCategoryByName(String name) {
+        Category category = categoryRepository.findByName(name);
+        return categoryMapper.toDto(category);
+    }
 }

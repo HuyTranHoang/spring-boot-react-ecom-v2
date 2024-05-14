@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS product
     description    VARCHAR(1255)  DEFAULT NULL,
     unit_price     DECIMAL(13, 2) DEFAULT NULL,
     image_url      VARCHAR(255)   DEFAULT NULL,
-    units_in_stock INT(11)        DEFAULT NULL,
+    unit_in_stock INT(11)        DEFAULT NULL,
     category_id    int(11)        DEFAULT NULL,
     brand          VARCHAR(255)   DEFAULT NULL,
     date_created   DATETIME(6)    DEFAULT NULL,

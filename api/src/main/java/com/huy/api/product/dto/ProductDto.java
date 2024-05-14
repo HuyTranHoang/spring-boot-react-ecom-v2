@@ -17,7 +17,7 @@ public class ProductDto {
 
     private String imageUrl;
 
-    private int unitsInStock;
+    private int unitInStock;
 
     private String brand;
 
@@ -25,5 +25,5 @@ public class ProductDto {
 
     private String categoryName;
 
-    private MultipartFile file;
+    private MultipartFile image;
 }

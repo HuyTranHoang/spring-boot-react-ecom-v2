@@ -43,10 +43,10 @@ public class ProductController {
 
     @PostMapping({"", "/"})
     public ResponseEntity<Product> saveProduct(@ModelAttribute ProductDto productDto) throws IOException {
-        MultipartFile file = productDto.getFile();
+        MultipartFile image = productDto.getImage();
 
-        if (file != null) {
-            String imageFileExtension = file.getContentType();
+        if (image != null) {
+            String imageFileExtension = image.getContentType();
 
             List<String> allowedExtensions = Arrays.asList(MimeTypeUtils.IMAGE_JPEG_VALUE, MimeTypeUtils.IMAGE_PNG_VALUE);
             if (!allowedExtensions.contains(imageFileExtension)) {
@@ -59,9 +59,9 @@ public class ProductController {
                 Files.createDirectories(fileFolder);
             }
 
-            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename();
             Path filePath = fileFolder.resolve(fileName);
-            Files.copy(file.getInputStream(), filePath);
+            Files.copy(image.getInputStream(), filePath);
             productDto.setImageUrl(fileName);
         } else {
             System.out.println("File is null");

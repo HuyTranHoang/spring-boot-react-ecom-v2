@@ -9,4 +9,6 @@ public interface CategoryService {
     List<CategoryDto> getAllCategories();
 
     CategoryDto getCategoryById(long id);
+
+    CategoryDto getCategoryByName(String name);
 }

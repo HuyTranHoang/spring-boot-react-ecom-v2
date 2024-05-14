@@ -4,7 +4,7 @@ export default interface Product {
   description: string
   unitPrice: number
   imageUrl: string
-  unitsInStock: number
+  unitInStock: number
   brand: string
   categoryId: number
   categoryName: string
