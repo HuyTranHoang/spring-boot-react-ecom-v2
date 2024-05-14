@@ -1,22 +1,34 @@
 import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
 import { useState } from 'react'
 import Category from '../../type/category.type'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
-import Product from '../../type/product.type'
 
 type ProductFormProps = {
   categories: Category[]
-  setProducts: React.Dispatch<React.SetStateAction<Product[]>>
-  products: Product[]
 }
 
-function ProductForm({ categories, setProducts, products }: ProductFormProps) {
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
-  const [unitPrice, setUnitPrice] = useState(0)
-  const [unitInStock, setUnitInStock] = useState(0)
-  const [brand, setBrand] = useState('')
-  const [categoryId, setCategoryId] = useState('')
+type FormFields = {
+  name: string
+  description: string
+  unitPrice: number
+  unitInStock: number
+  brand: string
+  categoryId: string
+  image: File | string
+}
+
+function ProductForm({ categories }: ProductFormProps) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormFields>({
+    defaultValues: {
+      categoryId: ''
+    }
+  })
+
   const [image, setImage] = useState({ preview: '', raw: '' as File | string })
 
   function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
@@ -28,21 +40,19 @@ function ProductForm({ categories, setProducts, products }: ProductFormProps) {
     })
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-
+  const onSubmit: SubmitHandler<FormFields> = (data) => {
     const formData = new FormData()
-    formData.append('name', name)
-    formData.append('description', description)
-    formData.append('unitPrice', String(unitPrice))
-    formData.append('unitInStock', String(unitInStock))
-    formData.append('brand', brand)
-    formData.append('categoryId', categoryId)
+    formData.append('name', data.name)
+    formData.append('description', data.description)
+    formData.append('unitPrice', data.unitPrice.toString())
+    formData.append('unitInStock', data.unitInStock.toString())
+    formData.append('brand', data.brand)
+    formData.append('categoryId', data.categoryId)
     formData.append('image', image.raw)
 
     const config = {
       headers: {
-        'content-type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data'
       }
     }
 
@@ -54,32 +64,10 @@ function ProductForm({ categories, setProducts, products }: ProductFormProps) {
       .catch(() => {
         alert('Failed to create product')
       })
-
-    setName('')
-    setDescription('')
-    setUnitPrice(0)
-    setUnitInStock(0)
-    setBrand('')
-    setCategoryId('')
-    setImage({ preview: '', raw: '' })
-
-    const newProduct: Product = {
-      id: products.length + 1,
-      name,
-      description,
-      unitPrice,
-      imageUrl: image.preview,
-      unitInStock,
-      brand,
-      categoryId: Number(categoryId),
-      categoryName: categories.find((category) => category.id === Number(categoryId))?.categoryName || ''
-    }
-
-    setProducts([...products, newProduct])
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container columnSpacing={6} rowSpacing={2}>
         <Grid container item xs={8} spacing={2}>
           <Grid item xs={12}>
@@ -87,16 +75,18 @@ function ProductForm({ categories, setProducts, products }: ProductFormProps) {
           </Grid>
 
           <Grid item xs={12}>
-            <TextField fullWidth label='Name' value={name} onChange={(e) => setName(e.target.value)} />
+            <TextField
+              fullWidth
+              label='Name'
+              {...register('name', {
+                required: 'Name is required'
+              })}
+            />
+            {errors.name && <Typography color='error'>{errors.name.message}</Typography>}
           </Grid>
 
           <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label='Description'
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+            <TextField fullWidth label='Description' {...register('description')} />
           </Grid>
 
           <Grid container item xs={6} spacing={2}>
@@ -105,34 +95,28 @@ function ProductForm({ categories, setProducts, products }: ProductFormProps) {
                 fullWidth
                 label='Unit Price'
                 type='number'
-                value={unitPrice}
-                onChange={(e) => setUnitPrice(Number(e.target.value))}
+                {...register('unitPrice', {
+                  required: 'Unit Price is required',
+                  min: {
+                    value: 5,
+                    message: 'Unit Price must be more than 5'
+                  }
+                })}
               />
+              {errors.unitPrice && <Typography color='error'>{errors.unitPrice.message}</Typography>}
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Unit In Stock'
-                type='number'
-                value={unitInStock}
-                onChange={(e) => setUnitInStock(Number(e.target.value))}
-              />
+              <TextField fullWidth label='Unit In Stock' type='number' {...register('unitInStock')} />
             </Grid>
           </Grid>
 
           <Grid container item xs={6} spacing={2}>
             <Grid item xs={12}>
-              <TextField fullWidth label='Brand' value={brand} onChange={(e) => setBrand(e.target.value)} />
+              <TextField fullWidth label='Brand' {...register('brand')} />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label='Category Name'
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                select
-              >
+              <TextField fullWidth label='Category Name' select {...register('categoryId')} defaultValue={''}>
                 {categories.map((category) => (
                   <MenuItem key={category.id} value={category.id}>
                     {category.categoryName}

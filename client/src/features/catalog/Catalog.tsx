@@ -33,7 +33,7 @@ function Catalog() {
 
   return (
     <>
-      <ProductForm categories={categories} setProducts={setProducts} />
+      <ProductForm categories={categories} />
       <Divider sx={{ borderColor: blue[300], my: 2 }} />
       <Typography variant='h4' align='center' color={blue[600]}>
         - Catalog -
