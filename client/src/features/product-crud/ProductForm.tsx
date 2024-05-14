@@ -1,12 +1,8 @@
 import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Category from '../../type/category.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
-
-type ProductFormProps = {
-  categories: Category[]
-}
 
 type FormFields = {
   name: string
@@ -18,7 +14,7 @@ type FormFields = {
   image: File | string
 }
 
-function ProductForm({ categories }: ProductFormProps) {
+function ProductForm() {
   const {
     register,
     handleSubmit,
@@ -30,6 +26,7 @@ function ProductForm({ categories }: ProductFormProps) {
   })
 
   const [image, setImage] = useState({ preview: '', raw: '' as File | string })
+  const [categories, setCategories] = useState<Category[]>([])
 
   function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     if (!event.target.files) return
@@ -65,6 +62,16 @@ function ProductForm({ categories }: ProductFormProps) {
         alert('Failed to create product')
       })
   }
+
+  useEffect(() => {
+    async function fetchCategories() {
+      const res = await axios.get<Category[]>('/api/categories/')
+      const data = res.data
+      setCategories(data)
+    }
+
+    fetchCategories().catch(() => alert('Failed to fetch products'))
+  }, [])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
