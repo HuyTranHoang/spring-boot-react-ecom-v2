@@ -3,6 +3,26 @@ import { useEffect, useState } from 'react'
 import Category from '../../type/category.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import axios from 'axios'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import SendIcon from '@mui/icons-material/Send'
+import FileUploadIcon from '@mui/icons-material/FileUpload'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+const schema = yup.object().shape({
+  name: yup.string().required('Name is required'),
+  description: yup.string().required('Description is required'),
+  unitPrice: yup.number().typeError('Unit price must be number').required('Unit price is required').positive(),
+  unitInStock: yup
+    .number()
+    .typeError('Unit in stock must be number')
+    .required('Unit in stock is required')
+    .integer()
+    .positive(),
+  brand: yup.string().required('Brand is required'),
+  categoryId: yup.string().required('Category is required')
+})
 
 type FormFields = {
   name: string
@@ -11,18 +31,16 @@ type FormFields = {
   unitInStock: number
   brand: string
   categoryId: string
-  image: File | string
 }
 
 function ProductForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    reset,
+    formState: { errors, isSubmitting }
   } = useForm<FormFields>({
-    defaultValues: {
-      categoryId: ''
-    }
+    resolver: yupResolver(schema)
   })
 
   const [image, setImage] = useState({ preview: '', raw: '' as File | string })
@@ -37,7 +55,7 @@ function ProductForm() {
     })
   }
 
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
     const formData = new FormData()
     formData.append('name', data.name)
     formData.append('description', data.description)
@@ -53,14 +71,14 @@ function ProductForm() {
       }
     }
 
-    axios
-      .post('/api/products/', formData, config)
-      .then(() => {
-        alert('Product created successfully')
-      })
-      .catch(() => {
-        alert('Failed to create product')
-      })
+    try {
+      await axios.post('/api/products/', formData, config)
+      toast.success('Product created successfully')
+      reset()
+      setImage({ preview: '', raw: '' })
+    } catch (error) {
+      toast.error('Failed to create product')
+    }
   }
 
   useEffect(() => {
@@ -74,93 +92,115 @@ function ProductForm() {
   }, [])
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container columnSpacing={6} rowSpacing={2}>
-        <Grid container item xs={8} spacing={2}>
-          <Grid item xs={12}>
-            <Typography variant='h5'>Product Form</Typography>
-          </Grid>
+    <>
+      <ToastContainer />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container columnSpacing={6} rowSpacing={2}>
+          <Grid container item xs={8} spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h5'>Product Form</Typography>
+            </Grid>
 
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label='Name'
-              {...register('name', {
-                required: 'Name is required'
-              })}
-            />
-            {errors.name && <Typography color='error'>{errors.name.message}</Typography>}
-          </Grid>
-
-          <Grid item xs={12}>
-            <TextField fullWidth label='Description' {...register('description')} />
-          </Grid>
-
-          <Grid container item xs={6} spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label='Unit Price'
-                type='number'
-                {...register('unitPrice', {
-                  required: 'Unit Price is required',
-                  min: {
-                    value: 5,
-                    message: 'Unit Price must be more than 5'
-                  }
-                })}
+                label='Name'
+                error={!!errors.name}
+                helperText={errors.name?.message}
+                {...register('name')}
               />
-              {errors.unitPrice && <Typography color='error'>{errors.unitPrice.message}</Typography>}
             </Grid>
 
             <Grid item xs={12}>
-              <TextField fullWidth label='Unit In Stock' type='number' {...register('unitInStock')} />
+              <TextField
+                fullWidth
+                label='Description'
+                error={!!errors.description}
+                helperText={errors.description?.message}
+                {...register('description')}
+              />
+            </Grid>
+
+            <Grid container item xs={6} spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Unit price'
+                  error={!!errors.unitPrice}
+                  helperText={errors.unitPrice?.message}
+                  {...register('unitPrice')}
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Unit In Stock'
+                  error={!!errors.unitInStock}
+                  helperText={errors.unitInStock?.message}
+                  {...register('unitInStock')}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid container item xs={6} spacing={2}>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Brand'
+                  error={!!errors.brand}
+                  helperText={errors.brand?.message}
+                  {...register('brand')}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  fullWidth
+                  label='Category Name'
+                  select
+                  error={!!errors.categoryId}
+                  helperText={errors.categoryId?.message}
+                  {...register('categoryId')}
+                  defaultValue={''}
+                >
+                  {categories.map((category) => (
+                    <MenuItem key={category.id} value={category.id}>
+                      {category.categoryName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+            </Grid>
+
+            <Grid item xs={12}>
+              <input
+                accept='image/*'
+                id='contained-button-file'
+                multiple
+                type='file'
+                onChange={handleUpload}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor='contained-button-file'>
+                <Button fullWidth variant='contained' color='secondary' component='span' endIcon={<FileUploadIcon />}>
+                  Upload Image
+                </Button>
+              </label>
             </Grid>
           </Grid>
-
-          <Grid container item xs={6} spacing={2}>
-            <Grid item xs={12}>
-              <TextField fullWidth label='Brand' {...register('brand')} />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField fullWidth label='Category Name' select {...register('categoryId')} defaultValue={''}>
-                {categories.map((category) => (
-                  <MenuItem key={category.id} value={category.id}>
-                    {category.categoryName}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+          <Grid item xs={4}>
+            <Typography variant='h5'>Preview Image</Typography>
+            {image.preview && <img src={image.preview} alt='Preview' width='100%' />}
           </Grid>
 
           <Grid item xs={12}>
-            <input
-              accept='image/*'
-              id='contained-button-file'
-              multiple
-              type='file'
-              onChange={handleUpload}
-              style={{ display: 'none' }}
-            />
-            <label htmlFor='contained-button-file'>
-              <Button variant='contained' color='secondary' component='span'>
-                Upload Image
-              </Button>
-            </label>
+            <Button disabled={isSubmitting} variant='contained' disableRipple type='submit' endIcon={<SendIcon />}>
+              {isSubmitting ? 'Submitting...' : 'Submit'}
+            </Button>
           </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Typography variant='h5'>Preview Image</Typography>
-          {image.preview && <img src={image.preview} alt='Preview' width='100%' />}
-        </Grid>
-
-        <Grid item xs={12}>
-          <Button variant='contained' disableRipple type='submit'>
-            Submit
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+      </form>
+    </>
   )
 }
 

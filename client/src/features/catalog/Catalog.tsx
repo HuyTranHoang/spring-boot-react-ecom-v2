@@ -1,5 +1,5 @@
 import Product from '../../type/product.type.ts'
-import { Divider, Grid, List, Typography } from '@mui/material'
+import { Divider, Grid, Typography } from '@mui/material'
 import CatalogItem from './CatalogItem.tsx'
 import { blue } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
