@@ -1,8 +1,15 @@
 import HubIcon from '@mui/icons-material/Hub'
-import { AppBar, Toolbar, Typography } from '@mui/material'
+import { AppBar, IconButton, Theme, Toolbar, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
+import Brightness7Icon from '@mui/icons-material/Brightness7'
 
-function Navbar() {
+type NavbarProps = {
+  colorMode: { toggleColorMode: () => void }
+  theme: Theme
+}
+
+function Navbar({ colorMode, theme }: NavbarProps) {
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -25,6 +32,9 @@ function Navbar() {
             My Shop
           </Typography>
         </Link>
+        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color='inherit'>
+          {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+        </IconButton>
       </Toolbar>
     </AppBar>
   )

@@ -1,25 +1,52 @@
 import { Container } from '@mui/material'
+import { ThemeProvider, createTheme } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
 import Catalog from './features/catalog/Catalog.tsx'
 import Navbar from './ui/Navbar.tsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProductForm from './features/product-crud/ProductForm.tsx'
 import HomePage from './pages/HomePage.tsx'
+import { useMemo, useState } from 'react'
+
 function App() {
+  const [mode, setMode] = useState<'light' | 'dark'>('light')
+  const colorMode = useMemo(
+    () => ({
+      toggleColorMode: () => {
+        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'))
+      }
+    }),
+    []
+  )
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode
+        }
+      }),
+    [mode]
+  )
+
   return (
-    <BrowserRouter>
-      <Navbar />
-      <Container sx={{ mt: 3 }}>
-        <Routes>
-          <Route path='/' element={<HomePage />}></Route>
-          <Route path='catalog' element={<Catalog />}></Route>
-          <Route path='addProduct' element={<ProductForm />}></Route>
-          <Route path='*' element={<div>Not Found</div>}></Route>
-        </Routes>
-      </Container>
-      <footer style={{ textAlign: 'center', marginTop: '1rem' }}>
-        <p>&copy; 2024 My Shop</p>
-      </footer>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <BrowserRouter>
+        <Navbar colorMode={colorMode} theme={theme} />
+        <Container sx={{ mt: 3 }}>
+          <Routes>
+            <Route path='/' element={<HomePage />}></Route>
+            <Route path='catalog' element={<Catalog />}></Route>
+            <Route path='addProduct' element={<ProductForm />}></Route>
+            <Route path='*' element={<div>Not Found</div>}></Route>
+          </Routes>
+        </Container>
+        <footer style={{ textAlign: 'center', marginTop: '1rem' }}>
+          <p>&copy; 2024 My Shop</p>
+        </footer>
+      </BrowserRouter>
+    </ThemeProvider>
   )
 }
 
