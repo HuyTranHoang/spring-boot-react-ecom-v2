@@ -1,6 +1,7 @@
-import HubIcon from '@mui/icons-material/Hub'
-import { AppBar, IconButton, Theme, Toolbar, Typography } from '@mui/material'
-import { Link } from 'react-router-dom'
+import StorefrontIcon from '@mui/icons-material/Storefront'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import { AppBar, Badge, Box, Button, IconButton, Theme, Toolbar, Typography } from '@mui/material'
+import { Link, NavLink } from 'react-router-dom'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
 
@@ -9,11 +10,17 @@ type NavbarProps = {
   theme: Theme
 }
 
+const navLinkStyle = {
+  textDecoration: 'none',
+  color: 'inherit',
+  marginRight: '1rem'
+}
+
 function Navbar({ colorMode, theme }: NavbarProps) {
   return (
     <AppBar position='static'>
       <Toolbar>
-        <HubIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+        <StorefrontIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
         <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
           <Typography
             variant='h6'
@@ -32,9 +39,31 @@ function Navbar({ colorMode, theme }: NavbarProps) {
             My Shop
           </Typography>
         </Link>
-        <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color='inherit'>
+
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <NavLink to='/catalog' style={navLinkStyle}>
+            Catalog
+          </NavLink>
+
+          <NavLink to='/about' style={navLinkStyle}>
+            About
+          </NavLink>
+
+          <NavLink to='/contact' style={navLinkStyle}>
+            Contact
+          </NavLink>
+        </Box>
+
+        <IconButton sx={{ marginRight: '1rem' }} onClick={colorMode.toggleColorMode} color='inherit'>
           {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
+
+        <Badge badgeContent={4} color='secondary' sx={{ marginRight: '1rem' }}>
+          <ShoppingCartIcon color='inherit' />
+        </Badge>
+
+        <Button color='inherit'>Login</Button>
+        <Button color='inherit'>Register</Button>
       </Toolbar>
     </AppBar>
   )

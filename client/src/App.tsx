@@ -7,6 +7,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import ProductForm from './features/product-crud/ProductForm.tsx'
 import HomePage from './pages/HomePage.tsx'
 import { useMemo, useState } from 'react'
+import About from './pages/About.tsx'
+import Contact from './pages/Contact.tsx'
+import NotFound from './pages/NotFound.tsx'
 
 function App() {
   const [mode, setMode] = useState<'light' | 'dark'>('light')
@@ -39,7 +42,9 @@ function App() {
             <Route path='/' element={<HomePage />}></Route>
             <Route path='catalog' element={<Catalog />}></Route>
             <Route path='addProduct' element={<ProductForm />}></Route>
-            <Route path='*' element={<div>Not Found</div>}></Route>
+            <Route path='about' element={<About />}></Route>
+            <Route path='contact' element={<Contact />}></Route>
+            <Route path='*' element={<NotFound />}></Route>
           </Routes>
         </Container>
         <footer style={{ textAlign: 'center', marginTop: '1rem' }}>
