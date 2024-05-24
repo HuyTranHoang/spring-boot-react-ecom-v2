@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import About from './pages/About.tsx'
 import Contact from './pages/Contact.tsx'
 import NotFound from './pages/NotFound.tsx'
+import { ToastContainer } from 'react-toastify'
 
 function App() {
   const [mode, setMode] = useState<'light' | 'dark'>('light')
@@ -35,6 +36,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <ToastContainer />
       <BrowserRouter>
         <Navbar colorMode={colorMode} theme={theme} />
         <Container sx={{ mt: 3 }}>

@@ -7,7 +7,7 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import SendIcon from '@mui/icons-material/Send'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
-import { ToastContainer, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 const schema = yup.object().shape({
@@ -93,7 +93,6 @@ function ProductForm() {
 
   return (
     <>
-      <ToastContainer />
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container columnSpacing={6} rowSpacing={2}>
           <Grid container item xs={8} spacing={2}>
