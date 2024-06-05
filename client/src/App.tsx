@@ -11,6 +11,8 @@ import About from './pages/About.tsx'
 import Contact from './pages/Contact.tsx'
 import NotFound from './pages/NotFound.tsx'
 import { ToastContainer } from 'react-toastify'
+import ServerError from './features/error/ServerError.tsx'
+import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 
 function App() {
   const [mode, setMode] = useState<'light' | 'dark'>('light')
@@ -38,6 +40,7 @@ function App() {
       <CssBaseline />
       <ToastContainer />
       <BrowserRouter>
+        <AxiosInterceptor />
         <Navbar colorMode={colorMode} theme={theme} />
         <Container sx={{ mt: 3 }}>
           <Routes>
@@ -46,6 +49,7 @@ function App() {
             <Route path='addProduct' element={<ProductForm />}></Route>
             <Route path='about' element={<About />}></Route>
             <Route path='contact' element={<Contact />}></Route>
+            <Route path='server-error' element={<ServerError />}></Route>
             <Route path='*' element={<NotFound />}></Route>
           </Routes>
         </Container>

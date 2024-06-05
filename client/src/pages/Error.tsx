@@ -25,7 +25,7 @@ function Error() {
       const res = await axios.get('/api/buggy/500')
       console.log(res.data)
     } catch (error) {
-      console.log(error.response.data)
+      console.log(error.response)
     }
   }
 
