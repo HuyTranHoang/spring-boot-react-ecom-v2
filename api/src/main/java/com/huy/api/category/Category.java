@@ -14,7 +14,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "category")
+@Table(name = "product_category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

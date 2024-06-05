@@ -32,7 +32,7 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "unit_in_stock")
+    @Column(name = "units_in_stock")
     private int unitInStock;
 
     private String brand;

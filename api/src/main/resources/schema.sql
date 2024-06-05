@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS product
     description    VARCHAR(1255)  DEFAULT NULL,
     unit_price     DECIMAL(13, 2) DEFAULT NULL,
     image_url      VARCHAR(255)   DEFAULT NULL,
-    unit_in_stock INT(11)        DEFAULT NULL,
+    units_in_stock INT(11)        DEFAULT NULL,
     category_id    int(11)        DEFAULT NULL,
     brand          VARCHAR(255)   DEFAULT NULL,
     date_created   DATETIME(6)    DEFAULT NULL,
@@ -26,21 +26,21 @@ CREATE TABLE IF NOT EXISTS product
 );
 
 DROP TABLE IF EXISTS basket;
-CREATE TABLE IF NOT EXISTS basket (
-                                      id BIGINT(20) NOT NULL AUTO_INCREMENT,
-                                      buyer_id VARCHAR(255) DEFAULT NULL,
-                                      PRIMARY KEY (id)
+CREATE TABLE IF NOT EXISTS basket
+(
+    id       BIGINT(20) NOT NULL AUTO_INCREMENT,
+    buyer_id VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS basket_item;
-CREATE TABLE IF NOT EXISTS basket_item (
-                                           id BIGINT(20) NOT NULL AUTO_INCREMENT,
-                                           quantity INT(11) DEFAULT NULL,
-                                           basket_id BIGINT(20) DEFAULT NULL,
-                                           product_id int(11) DEFAULT NULL,
-                                           PRIMARY KEY (id),
-                                           CONSTRAINT fk_basket_item_product FOREIGN KEY (product_id) REFERENCES product (id),
-                                           CONSTRAINT fk_basket_item_basket FOREIGN KEY (basket_id) REFERENCES basket (id)
+CREATE TABLE IF NOT EXISTS basket_item
+(
+    id         BIGINT(20) NOT NULL AUTO_INCREMENT,
+    quantity   INT(11)    DEFAULT NULL,
+    basket_id  BIGINT(20) DEFAULT NULL,
+    product_id int(11)    DEFAULT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_basket_item_product FOREIGN KEY (product_id) REFERENCES product (id),
+    CONSTRAINT fk_basket_item_basket FOREIGN KEY (basket_id) REFERENCES basket (id)
 );
-
-SET FOREIGN_KEY_CHECKS = 1;
