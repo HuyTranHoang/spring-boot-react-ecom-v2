@@ -4,19 +4,27 @@ import CatalogItem from './CatalogItem.tsx'
 import { blue } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import LoadingComponent from '../../ui/LoadingComponent.tsx'
 
 function Catalog() {
   const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchProducts() {
       const res = await axios.get<Product[]>('/api/products/')
       const data = res.data
       setProducts(data)
+
+      setLoading(false)
     }
 
     fetchProducts().catch(() => alert('Failed to fetch products'))
   }, [])
+
+  if (loading) {
+    return <LoadingComponent />
+  }
 
   return (
     <>

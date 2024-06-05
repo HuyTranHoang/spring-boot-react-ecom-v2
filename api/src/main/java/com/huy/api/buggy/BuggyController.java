@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/buggy")
 public class BuggyController {
 
-    @PostMapping("validate-error")
+    @PostMapping("/validate-error")
     public ResponseEntity<Buggy> validateError(@Valid @RequestBody Buggy buggy) {
         System.out.println(buggy);
         return ResponseEntity.ok(buggy);

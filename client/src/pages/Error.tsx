@@ -1,16 +1,22 @@
-import { Button, ButtonGroup, Container, Typography } from '@mui/material'
+import { Alert, AlertTitle, Button, ButtonGroup, Container, List, ListItem, ListItemText, Typography } from "@mui/material";
 import axios from 'axios'
+import { useState } from "react";
 
 function Error() {
+  const [validationErrors, setValidationErrors] = useState<string[]>([]);
+  const config = {
+    headers: {'content-type': 'application/json'}
+  };
+
   const ValidateErrorHandling = async () => {
     try {
-      const res = await axios.post('/api/buggy/validate-error', { name: 'e', email: 'e' })
-      console.log(res)
-    } catch (error) {
-      console.log(error.response?.data)
+      const res = await axios.post('/api/buggy/validate-error', {name: 'e', email: 'few'}, config);
+      const data = res.data;
+    } catch (errors) {
+      console.log(errors);
+      setValidationErrors(errors);
     }
   }
-
   const Error404Handling = async () => {
     try {
       const res = await axios.get('/api/buggy/404')
@@ -40,6 +46,19 @@ function Error() {
         <Button onClick={Error404Handling}>Test 404 error</Button>
         <Button onClick={Error500Handling}>Test 500 error</Button>
       </ButtonGroup>
+
+      {validationErrors.length > 0 &&
+        <Alert severity="error">
+          <AlertTitle>Validation Errors</AlertTitle>
+          <List>
+            {validationErrors.map(error => (
+              <ListItem key={error}>
+                <ListItemText>{error}</ListItemText>
+              </ListItem>
+            ))}
+          </List>
+        </Alert>
+      }
     </Container>
   )
 }
