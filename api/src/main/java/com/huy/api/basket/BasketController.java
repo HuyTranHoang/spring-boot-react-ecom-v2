@@ -66,6 +66,33 @@ public class BasketController {
         return getBasketDtoResponseEntity(basket);
     }
 
+    @DeleteMapping
+    @Transactional
+    public ResponseEntity<BasketDto> removeItemFromBasket(@RequestParam long productId,
+                                                          @RequestParam int quantity,
+                                                          @CookieValue(name = "buyerId", defaultValue = "") String buyerId) {
+        Basket basket = basketRepository.findByBuyerId(buyerId);
+        if (basket == null) {
+            throw new NoResultException("Basket not found");
+        }
+
+        BasketItem existingBasketItem = basket.getBasketItems().stream()
+                .filter(item -> item.getProduct().getId() == productId)
+                .findFirst()
+                .orElseThrow(() -> new NoResultException("Product not found in basket"));
+
+        if (existingBasketItem.getQuantity() > quantity) {
+            existingBasketItem.setQuantity(existingBasketItem.getQuantity() - quantity);
+        } else {
+            basket.getBasketItems().remove(existingBasketItem);
+            basketItemRepository.delete(existingBasketItem);
+        }
+
+        basketRepository.save(basket);
+
+        return getBasketDtoResponseEntity(basket);
+    }
+
     private ResponseEntity<BasketDto> getBasketDtoResponseEntity(Basket basket) {
         List<BasketItemDto> basketItemDtoList = basket.getBasketItems().stream()
                 .map(item -> BasketItemDto.builder()
