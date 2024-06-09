@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/basket")
@@ -29,7 +28,7 @@ public class BasketController {
         this.basketItemRepository = basketItemRepository;
     }
 
-    @GetMapping
+    @GetMapping({"/", ""})
     public ResponseEntity<BasketDto> getBasket(@CookieValue(name = "buyerId", defaultValue = "") String buyerId) {
         Basket basket = basketRepository.findByBuyerId(buyerId);
         if (basket == null) {
@@ -40,7 +39,7 @@ public class BasketController {
 
     }
 
-    @PostMapping
+    @PostMapping({"/", ""})
     @Transactional
     public ResponseEntity<BasketDto> addItemToBasket(@RequestParam long productId,
                                                      @RequestParam int quantity,
@@ -66,7 +65,7 @@ public class BasketController {
         return getBasketDtoResponseEntity(basket);
     }
 
-    @DeleteMapping
+    @DeleteMapping({"/", ""})
     @Transactional
     public ResponseEntity<BasketDto> removeItemFromBasket(@RequestParam long productId,
                                                           @RequestParam int quantity,
@@ -101,6 +100,7 @@ public class BasketController {
                         .quantity(item.getQuantity())
                         .brand(item.getProduct().getBrand())
                         .unitPrice(item.getProduct().getUnitPrice())
+                        .imageUrl(item.getProduct().getImageUrl())
                         .categoryName(item.getProduct().getCategory().getCategoryName())
                         .build()
                 )

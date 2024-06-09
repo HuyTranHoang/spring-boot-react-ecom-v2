@@ -1,7 +1,7 @@
 import Product from '../../type/product.type.ts'
-import { Divider, Grid, Typography } from '@mui/material'
+import { Grid, Paper, Typography } from '@mui/material'
 import CatalogItem from './CatalogItem.tsx'
-import { blue } from '@mui/material/colors'
+import { pink } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import LoadingComponent from '../../ui/LoadingComponent.tsx'
@@ -19,7 +19,7 @@ function Catalog() {
       setLoading(false)
     }
 
-    fetchProducts().catch(() => alert('Failed to fetch products'))
+    fetchProducts()
   }, [])
 
   if (loading) {
@@ -28,11 +28,11 @@ function Catalog() {
 
   return (
     <>
-      <Typography variant='h4' align='center' color={blue[600]}>
-        - Catalog -
-      </Typography>
-
-      <Divider sx={{ borderColor: blue[300], my: 2 }} />
+      <Paper sx={{backgroundColor: pink[500], marginBottom: 3}}>
+        <Typography paddingTop={3} variant='h4' align={'center'} height={100} color={'white'}>
+          Catalog
+        </Typography>
+      </Paper>
 
       <Grid container spacing={2}>
         {products.map((product) => (

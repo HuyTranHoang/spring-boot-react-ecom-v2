@@ -10,8 +10,7 @@ function Error() {
 
   const ValidateErrorHandling = async () => {
     try {
-      const res = await axios.post('/api/buggy/validate-error', {name: 'e', email: 'few'}, config);
-      const data = res.data;
+      await axios.post('/api/buggy/validate-error', {name: 'e', email: 'few'}, config);
     } catch (errors) {
       console.log(errors);
       setValidationErrors(errors);

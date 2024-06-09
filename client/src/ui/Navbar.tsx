@@ -58,8 +58,8 @@ function Navbar({ colorMode, theme }: NavbarProps) {
           {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
 
-        <Badge badgeContent={4} color='secondary' sx={{ marginRight: '1rem' }}>
-          <ShoppingCartIcon color='inherit' />
+        <Badge badgeContent={4} color='secondary' sx={{ marginRight: '1rem' }} component={Link} to={'/basket'}>
+          <ShoppingCartIcon sx={{color: 'white'}} />
         </Badge>
 
         <Button color='inherit'>Login</Button>

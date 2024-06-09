@@ -43,24 +43,24 @@ INSERT INTO product (name, description, image_url, units_in_stock, unit_price, d
 VALUES ('The Self-Taught Programmer: The Definitive Guide to Programming Professionally',
         'This book is not just about learning to program; although you will learn to code. If you want to program professionally, it is not enough to learn to code; that is why, in addition to helping you learn to program, I also cover the rest of the things you need to know to program professionally that classes and books don\'t teach you. "The Self-taught Programmer" is a roadmap,
         a guide to take you from writing your first Python program, to passing your first technical interview.',
-        ' BOOK - PROGRAMMING - 1006. jpg ', 100, 21.87, NOW(), 4, ' Cory Althoff ');
+        'BOOK-PROGRAMMING-1006.jpg', 100, 21.87, NOW(), 4, 'Cory Althoff ');
 
 INSERT INTO product (name, description, image_url, units_in_stock, unit_price, date_created, category_id, brand)
-VALUES (' Computer Programming : The Bible : Learn from the basics to advanced of Python, C, C + +, C#,
-        HTML Coding, and Black Hat Hacking Step - by - Step in No Time ! ', ' Are you ready to learn and start
+VALUES ('Computer Programming : The Bible : Learn from the basics to advanced of Python, C, C + +, C#,
+        HTML Coding, and Black Hat Hacking Step - by - Step in No Time !', 'Are you ready to learn and start
         programming with any language in less than 12 hours ? The world of technology is changing and those who know how
         to handle it and who have the most knowledge about it are the ones who will get ahead.If you are a beginner who
         is interested in learning more and getting ahead, then this guidebook is the one for you.',
-        ' BOOK - PROGRAMMING - 1007. jpg ', 100, 14.95, NOW(), 4, ' CyberPunk Architects ');
+        'BOOK-PROGRAMMING-1007.jpg', 100, 14.95, NOW(), 4, 'CyberPunk Architects');
 
 INSERT INTO product (name, description, image_url, units_in_stock, unit_price, date_created, category_id, brand)
-VALUES (' Effective C : An Introduction to Professional C Programming ', ' Effective C will teach you how to
+VALUES ('Effective C : An Introduction to Professional C Programming', 'Effective C will teach you how to
         write professional, secure, and portable C code that will stand the test of time and help strengthen the
         foundation of the computing world.',
-        ' BOOK - PROGRAMMING - 1008. jpg ', 100, 35.01, NOW(), 4, ' Robert C.Seacord ');
+        'BOOK-PROGRAMMING-1008.jpg', 100, 35.01, NOW(), 4, 'Robert C.Seacord ');
 
 INSERT INTO product (name, description, image_url, units_in_stock, unit_price, date_created, category_id, brand)
-VALUES (' Head First Design Patterns : Building Extensible and Maintainable Object - Oriented Software 2nd
+VALUES ('Head First Design Patterns : Building Extensible and Maintainable Object - Oriented Software 2nd
         Edition ', ' If you\'ve read a Head First book, you know what to expect: a visually rich format designed for the way your brain works. With Head First Design Patterns, 2E you\'
         ll learn design principles and patterns in a way that won\'t put you to sleep, so you can get out there to solve software design problems and speak the language of patterns with others on your team.',
         'BOOK-PROGRAMMING-1009.jpg', 100, 32.43, NOW(), 4, 'Elisabeth Robson and Eric Freeman');

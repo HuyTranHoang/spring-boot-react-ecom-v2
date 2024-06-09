@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import ServerError from './features/error/ServerError.tsx'
 import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 import AppLayout from './ui/AppLayout.tsx'
+import Basket from './features/basket/Basket.tsx'
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path='/' element={<HomePage />}></Route>
           <Route path='catalog' element={<Catalog />}></Route>
           <Route path='addProduct' element={<ProductForm />}></Route>
+          <Route path='basket' element={<Basket />}></Route>
           <Route path='about' element={<About />}></Route>
           <Route path='contact' element={<Contact />}></Route>
           <Route path='server-error' element={<ServerError />}></Route>

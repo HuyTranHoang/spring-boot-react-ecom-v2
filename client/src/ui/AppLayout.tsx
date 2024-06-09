@@ -3,6 +3,7 @@ import Navbar from './Navbar.tsx'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { Container } from '@mui/material'
 import { Outlet } from 'react-router-dom'
+import { indigo, pink } from '@mui/material/colors'
 
 
 function AppLayout() {
@@ -21,10 +22,11 @@ function AppLayout() {
     () =>
       createTheme({
         palette: {
-          mode
-        }
+          primary: indigo,
+          secondary: pink,
+        },
       }),
-    [mode]
+    []
   )
 
   return (
