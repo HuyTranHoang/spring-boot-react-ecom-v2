@@ -94,7 +94,7 @@ function ProductForm() {
 
   return (
     <>
-      <Paper sx={{backgroundColor: green[500], marginBottom: 3}}>
+      <Paper sx={{backgroundColor: green[300], marginBottom: 3}}>
         <Typography paddingTop={3} variant='h4' align={'center'} height={100} color={'white'}>
           Add product
         </Typography>

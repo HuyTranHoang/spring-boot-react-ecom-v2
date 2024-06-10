@@ -28,7 +28,7 @@ function Catalog() {
 
   return (
     <>
-      <Paper sx={{backgroundColor: pink[500], marginBottom: 3}}>
+      <Paper sx={{backgroundColor: pink[300], marginBottom: 3}}>
         <Typography paddingTop={3} variant='h4' align={'center'} height={100} color={'white'}>
           Catalog
         </Typography>
