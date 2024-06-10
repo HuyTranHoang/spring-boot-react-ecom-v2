@@ -9,11 +9,10 @@ import TableRow from '@mui/material/TableRow'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import BasketType from '../../type/basket.type.ts'
-import LoadingComponent from '../../ui/LoadingComponent.tsx'
 import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'
 
 const initBasket: BasketType = {
   id: 0,
@@ -23,7 +22,26 @@ const initBasket: BasketType = {
 
 function Basket() {
   const [basket, setBasket] = useState<BasketType>(initBasket)
-  const [loading, setLoading] = useState(true)
+
+  const handleRemoveItem = async (productId: number) => {
+    try {
+      const res = await axios.delete(`/api/basket?productId=${productId}`)
+      setBasket(res.data)
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleChangeQuantity = async (productId: number, quantity: number) => {
+    try {
+      const res = await axios.put(`/api/basket?productId=${productId}&quantity=${quantity}`)
+      setBasket(res.data)
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   useEffect(() => {
     async function fetchBasket() {
@@ -31,15 +49,11 @@ function Basket() {
       const data = res.data
       setBasket(data)
 
-      setLoading(false)
     }
 
     fetchBasket()
   }, [])
 
-  if (loading) {
-    return <LoadingComponent />
-  }
 
   return (
     <>
@@ -87,11 +101,11 @@ function Basket() {
                   <Typography variant='body2'>{row.brand}</Typography>
                 </TableCell>
                 <TableCell align='right'>
-                  <IconButton sx={{ marginRight: 1 }}>
+                  <IconButton sx={{ marginRight: 1 }} onClick={() => handleChangeQuantity(row.productId, row.quantity - 1)}>
                     <RemoveIcon color='primary' />
                   </IconButton>
                   {row.quantity}
-                  <IconButton sx={{ marginLeft: 1 }}>
+                  <IconButton sx={{ marginLeft: 1 }} onClick={() => handleChangeQuantity(row.productId, row.quantity + 1)}>
                     <AddIcon color='primary' />
                   </IconButton>
                 </TableCell>
@@ -106,12 +120,39 @@ function Basket() {
                   </Typography>
                 </TableCell>
                 <TableCell align='right'>
-                  <Button variant='outlined' size='small' color='secondary' startIcon={<DeleteIcon />}>
+                  <Button
+                    variant='outlined'
+                    size='small'
+                    color='secondary'
+                    startIcon={<DeleteIcon />}
+                    onClick={() => handleRemoveItem(row.productId)}
+                  >
                     Remove
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
+
+            {basket.basketItems.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={7} align='center'>
+                  <Typography variant='h6' color='textSecondary'>
+                    No items in the cart
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            )}
+
+            <TableRow>
+              <TableCell colSpan={4} />
+              <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                Total
+              </TableCell>
+              <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                ${basket.basketItems.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0).toFixed(2)}
+              </TableCell>
+              <TableCell />
+            </TableRow>
           </TableBody>
         </Table>
       </TableContainer>

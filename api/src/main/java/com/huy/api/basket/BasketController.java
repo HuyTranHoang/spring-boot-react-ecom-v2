@@ -65,10 +65,37 @@ public class BasketController {
         return getBasketDtoResponseEntity(basket);
     }
 
+    @PutMapping({"/", ""})
+    @Transactional
+    public ResponseEntity<BasketDto> updateItemInBasket(@RequestParam long productId,
+                                                        @RequestParam int quantity,
+                                                        @CookieValue(name = "buyerId", defaultValue = "") String buyerId) {
+        Basket basket = basketRepository.findByBuyerId(buyerId);
+        if (basket == null) {
+            throw new NoResultException("Basket not found");
+        }
+
+        BasketItem existingBasketItem = basket.getBasketItems().stream()
+                .filter(item -> item.getProduct().getId() == productId)
+                .findFirst()
+                .orElseThrow(() -> new NoResultException("Product not found in basket"));
+
+        if (quantity <= 0) {
+            basket.getBasketItems().remove(existingBasketItem);
+            basketItemRepository.delete(existingBasketItem);
+            basketRepository.save(basket);
+            return getBasketDtoResponseEntity(basket);
+        }
+
+        existingBasketItem.setQuantity(quantity);
+        basketItemRepository.save(existingBasketItem);
+
+        return getBasketDtoResponseEntity(basket);
+    }
+
     @DeleteMapping({"/", ""})
     @Transactional
     public ResponseEntity<BasketDto> removeItemFromBasket(@RequestParam long productId,
-                                                          @RequestParam int quantity,
                                                           @CookieValue(name = "buyerId", defaultValue = "") String buyerId) {
         Basket basket = basketRepository.findByBuyerId(buyerId);
         if (basket == null) {
@@ -80,13 +107,8 @@ public class BasketController {
                 .findFirst()
                 .orElseThrow(() -> new NoResultException("Product not found in basket"));
 
-        if (existingBasketItem.getQuantity() > quantity) {
-            existingBasketItem.setQuantity(existingBasketItem.getQuantity() - quantity);
-        } else {
-            basket.getBasketItems().remove(existingBasketItem);
-            basketItemRepository.delete(existingBasketItem);
-        }
-
+        basket.getBasketItems().remove(existingBasketItem);
+        basketItemRepository.delete(existingBasketItem);
         basketRepository.save(basket);
 
         return getBasketDtoResponseEntity(basket);
