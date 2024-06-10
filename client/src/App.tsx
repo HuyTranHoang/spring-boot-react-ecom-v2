@@ -11,8 +11,20 @@ import ServerError from './features/error/ServerError.tsx'
 import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 import AppLayout from './ui/AppLayout.tsx'
 import Basket from './features/basket/Basket.tsx'
+import { useEffect } from 'react'
+import { getCookie } from './utils/util.ts'
 
 function App() {
+
+  useEffect(() => {
+    const cookie = getCookie('buyerId')
+    if (cookie) {
+      console.log(cookie)
+    } else {
+      console.log('no cookie')
+    }
+  }, [])
+
   return (
     <BrowserRouter>
       <CssBaseline />

@@ -44,20 +44,20 @@ function CatalogItem({ product }: CatalogItemProps) {
   return (
     <Card sx={{ minWidth: 275 }}>
       <CardContent>
-        <TitleElipsis sx={{minHeight: 64}} variant="h5">{product.name}</TitleElipsis>
+        <TitleElipsis sx={{ minHeight: 64 }} variant="h5">{product.name}</TitleElipsis>
         <Typography sx={{ mb: 1.5 }} color="text.secondary">
           {product.categoryName}
         </Typography>
         <CardMedia sx={{ height: 240, objectFit: 'cover' }} image={`/api/file/image/${product.imageUrl}`} />
-        <TypographyElipsis sx={{mt: 1.5}} variant="body2">{product.description}</TypographyElipsis>
+        <TypographyElipsis sx={{ mt: 1.5 }} variant="body2">{product.description}</TypographyElipsis>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-          <Typography fontWeight='bold' color={deepPurple[500]} variant="body2">${product.unitPrice}</Typography>
+          <Typography fontWeight="bold" color={deepPurple[500]} variant="body2">${product.unitPrice}</Typography>
           <Typography variant="body2">In Stock: {product.unitInStock}</Typography>
         </Box>
       </CardContent>
-      <CardActions sx={{display: 'flex', justifyContent: 'space-between'}}>
-        <Button variant='outlined' size="small">Learn More</Button>
-        <Button variant='outlined' size="small" disabled={loading} onClick={() => handleAddItem(product.id)}>
+      <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Button variant="outlined" size="small">Learn More</Button>
+        <Button variant="outlined" size="small" disabled={loading} onClick={() => handleAddItem(product.id)}>
           {loading ? 'Adding...' : 'Add to cart'}
         </Button>
       </CardActions>
