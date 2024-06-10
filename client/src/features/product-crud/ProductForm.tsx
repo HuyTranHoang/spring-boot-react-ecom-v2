@@ -1,4 +1,4 @@
-import { Button, Grid, MenuItem, TextField, Typography } from '@mui/material'
+import { Button, Grid, MenuItem, Paper, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react'
 import Category from '../../type/category.type'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -9,6 +9,7 @@ import SendIcon from '@mui/icons-material/Send'
 import FileUploadIcon from '@mui/icons-material/FileUpload'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { green } from '@mui/material/colors'
 
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
@@ -93,6 +94,12 @@ function ProductForm() {
 
   return (
     <>
+      <Paper sx={{backgroundColor: green[500], marginBottom: 3}}>
+        <Typography paddingTop={3} variant='h4' align={'center'} height={100} color={'white'}>
+          Add product
+        </Typography>
+      </Paper>
+
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container columnSpacing={6} rowSpacing={2}>
           <Grid container item xs={8} spacing={2}>

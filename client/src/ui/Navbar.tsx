@@ -20,29 +20,31 @@ function Navbar({ colorMode, theme }: NavbarProps) {
   return (
     <AppBar position='static'>
       <Toolbar>
-        <StorefrontIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-        <Link to='/' style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link to='/' style={{ textDecoration: 'none', color: 'inherit', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <StorefrontIcon sx={{ display: { xs: 'none', md: 'flex' }}}/>
           <Typography
             variant='h6'
             noWrap
             component='span'
             sx={{
-              mx: 2,
+              mr: 2,
               display: { xs: 'none', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
+              fontFamily: 'Roboto, sans-serif',
               color: 'inherit',
               textDecoration: 'none'
             }}
           >
-            My Shop
+            <span style={{fontWeight: 'bold'}}>book</span>Shop
           </Typography>
         </Link>
 
         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
           <NavLink to='/catalog' style={navLinkStyle}>
             Catalog
+          </NavLink>
+
+          <NavLink to='/add-product' style={navLinkStyle}>
+            Add Product
           </NavLink>
 
           <NavLink to='/about' style={navLinkStyle}>

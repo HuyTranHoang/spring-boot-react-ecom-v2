@@ -90,7 +90,7 @@ public class BasketController {
         existingBasketItem.setQuantity(quantity);
         basketItemRepository.save(existingBasketItem);
 
-        return getBasketDtoResponseEntity(basket);
+        return getBasketDtoResponseEntity(basket);  
     }
 
     @DeleteMapping({"/", ""})

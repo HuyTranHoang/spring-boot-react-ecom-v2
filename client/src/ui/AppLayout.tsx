@@ -4,6 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles'
 import { Container } from '@mui/material'
 import { Outlet } from 'react-router-dom'
 import { indigo, pink } from '@mui/material/colors'
+import Footer from './Footer.tsx'
 
 
 function AppLayout() {
@@ -31,16 +32,15 @@ function AppLayout() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar colorMode={colorMode} theme={theme} />
+      <div style={{display: 'flex', flexDirection: 'column', height: '100vh'}}>
+        <Navbar colorMode={colorMode} theme={theme} />
 
-      <Container sx={{ mt: 3 }}>
-        <Outlet />
-      </Container>
+        <Container sx={{ mt: 3, flexGrow: 1 }}>
+          <Outlet />
+        </Container>
 
-
-      <footer style={{ textAlign: 'center', marginTop: '1rem' }}>
-        <p>&copy; 2024 My Shop</p>
-      </footer>
+        <Footer />
+      </div>
     </ThemeProvider>
   )
 }
