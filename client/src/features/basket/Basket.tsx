@@ -6,6 +6,11 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import BasketType from '../../type/basket.type.ts'
@@ -22,11 +27,15 @@ const initBasket: BasketType = {
 
 function Basket() {
   const [basket, setBasket] = useState<BasketType>(initBasket)
+  const [modelOpen, setModelOpen] = useState(false)
+  const [deleteId, setDeleteId] = useState<number>(0)
 
   const handleRemoveItem = async (productId: number) => {
     try {
       const res = await axios.delete(`/api/basket?productId=${productId}`)
       setBasket(res.data)
+      setModelOpen(false)
+      setDeleteId(0)
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -35,6 +44,12 @@ function Basket() {
 
   const handleChangeQuantity = async (productId: number, quantity: number) => {
     try {
+      if (quantity < 1) {
+        setModelOpen(true)
+        setDeleteId(productId)
+        return
+      }
+
       const res = await axios.put(`/api/basket?productId=${productId}&quantity=${quantity}`)
       setBasket(res.data)
       console.log(res)
@@ -43,17 +58,25 @@ function Basket() {
     }
   }
 
+  const handleModalOpen = (deleteId: number) => {
+    setModelOpen(true)
+    setDeleteId(deleteId)
+  }
+
+  const handleModalClose = () => {
+    setModelOpen(false)
+    setDeleteId(0)
+  }
+
   useEffect(() => {
     async function fetchBasket() {
       const res = await axios.get<BasketType>('/api/basket')
       const data = res.data
       setBasket(data)
-
     }
 
     fetchBasket()
   }, [])
-
 
   return (
     <>
@@ -101,11 +124,17 @@ function Basket() {
                   <Typography variant='body2'>{row.brand}</Typography>
                 </TableCell>
                 <TableCell align='right'>
-                  <IconButton sx={{ marginRight: 1 }} onClick={() => handleChangeQuantity(row.productId, row.quantity - 1)}>
+                  <IconButton
+                    sx={{ marginRight: 1 }}
+                    onClick={() => handleChangeQuantity(row.productId, row.quantity - 1)}
+                  >
                     <RemoveIcon color='primary' />
                   </IconButton>
                   {row.quantity}
-                  <IconButton sx={{ marginLeft: 1 }} onClick={() => handleChangeQuantity(row.productId, row.quantity + 1)}>
+                  <IconButton
+                    sx={{ marginLeft: 1 }}
+                    onClick={() => handleChangeQuantity(row.productId, row.quantity + 1)}
+                  >
                     <AddIcon color='primary' />
                   </IconButton>
                 </TableCell>
@@ -116,7 +145,7 @@ function Basket() {
                 </TableCell>
                 <TableCell align='right'>
                   <Typography variant='body2' fontWeight={'bold'} color={indigo[600]}>
-                    ${row.quantity * row.unitPrice}
+                    ${(row.quantity * row.unitPrice).toFixed(2)}
                   </Typography>
                 </TableCell>
                 <TableCell align='right'>
@@ -125,7 +154,7 @@ function Basket() {
                     size='small'
                     color='secondary'
                     startIcon={<DeleteIcon />}
-                    onClick={() => handleRemoveItem(row.productId)}
+                    onClick={() => handleModalOpen(row.productId)}
                   >
                     Remove
                   </Button>
@@ -156,6 +185,26 @@ function Basket() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      <Dialog
+        open={modelOpen}
+        onClose={handleModalClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>{'Confirm'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Are you sure you want to remove this item from cart?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleModalClose}>No</Button>
+          <Button onClick={() => handleRemoveItem(deleteId)} autoFocus variant='contained' color='secondary'>
+            Remove it
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
