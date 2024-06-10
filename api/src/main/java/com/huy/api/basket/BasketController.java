@@ -52,6 +52,7 @@ public class BasketController {
             buyerId = UUID.randomUUID().toString();
             Cookie cookie = new Cookie("buyerId", buyerId);
             cookie.setMaxAge(60 * 60 * 24 * 7);
+            cookie.setPath("/");
             response.addCookie(cookie);
             basket = new Basket(buyerId);
         }

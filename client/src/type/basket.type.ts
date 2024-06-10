@@ -1,4 +1,4 @@
-import { BasketItem } from './basketItem.type.ts'
+import BasketItem from './basketItem.type.ts'
 
 export default interface Basket {
   id: number
