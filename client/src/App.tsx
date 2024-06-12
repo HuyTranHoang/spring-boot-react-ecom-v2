@@ -12,12 +12,12 @@ import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 import AppLayout from './ui/AppLayout.tsx'
 import Basket from './features/basket/Basket.tsx'
 import { useEffect } from 'react'
-import { getCookie } from './utils/util.ts'
+import Cookies from 'js-cookie'
 
 function App() {
 
   useEffect(() => {
-    const cookie = getCookie('buyerId')
+    const cookie = Cookies.get('buyerId')
     if (cookie) {
       console.log(cookie)
     } else {

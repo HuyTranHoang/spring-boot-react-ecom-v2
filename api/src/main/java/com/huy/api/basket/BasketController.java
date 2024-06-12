@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @RestController()
 @RequestMapping("/api/basket")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class BasketController {
 
     private final ProductRepository productRepository;
@@ -37,7 +36,6 @@ public class BasketController {
         }
 
         return getBasketDtoResponseEntity(basket);
-
     }
 
     @PostMapping({"/", ""})
