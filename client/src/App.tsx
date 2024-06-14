@@ -14,9 +14,7 @@ import Basket from './features/basket/Basket.tsx'
 import ProductDetails from './features/catalog/ProductDetails.tsx'
 import { BasketsProvider } from './context/BasketContext.tsx'
 
-
 function App() {
-
   return (
     <BasketsProvider>
       <BrowserRouter>
