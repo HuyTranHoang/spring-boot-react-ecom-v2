@@ -11,38 +11,33 @@ import ServerError from './features/error/ServerError.tsx'
 import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 import AppLayout from './ui/AppLayout.tsx'
 import Basket from './features/basket/Basket.tsx'
-import { useEffect } from 'react'
-import { getCookie } from './utils/util.ts'
+import ProductDetails from './features/catalog/ProductDetails.tsx'
+import { BasketsProvider } from './context/BasketContext.tsx'
+
 
 function App() {
 
-  useEffect(() => {
-    const cookie = getCookie('buyerId')
-    if (cookie) {
-      console.log(cookie)
-    } else {
-      console.log('no cookie')
-    }
-  }, [])
-
   return (
-    <BrowserRouter>
-      <CssBaseline />
-      <ToastContainer />
-      <AxiosInterceptor />
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path='/' element={<HomePage />}></Route>
-          <Route path='catalog' element={<Catalog />}></Route>
-          <Route path='add-product' element={<ProductForm />}></Route>
-          <Route path='basket' element={<Basket />}></Route>
-          <Route path='about' element={<About />}></Route>
-          <Route path='contact' element={<Contact />}></Route>
-          <Route path='server-error' element={<ServerError />}></Route>
-          <Route path='*' element={<NotFound />}></Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <BasketsProvider>
+      <BrowserRouter>
+        <CssBaseline />
+        <ToastContainer />
+        <AxiosInterceptor />
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path='/' element={<HomePage />}></Route>
+            <Route path='catalog' element={<Catalog />}></Route>
+            <Route path='catalog/:productId' element={<ProductDetails />}></Route>
+            <Route path='add-product' element={<ProductForm />}></Route>
+            <Route path='basket' element={<Basket />}></Route>
+            <Route path='about' element={<About />}></Route>
+            <Route path='contact' element={<Contact />}></Route>
+            <Route path='server-error' element={<ServerError />}></Route>
+            <Route path='*' element={<NotFound />}></Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </BasketsProvider>
   )
 }
 

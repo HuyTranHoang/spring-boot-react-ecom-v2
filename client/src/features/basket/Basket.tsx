@@ -18,22 +18,18 @@ import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
-
-const initBasket: BasketType = {
-  id: 0,
-  buyerId: '',
-  basketItems: []
-}
+import { useBaskets } from '../../context/BasketContext.tsx'
 
 function Basket() {
-  const [basket, setBasket] = useState<BasketType>(initBasket)
+  const { basket, setBasket, updateItem, removeItem } = useBaskets()
   const [modelOpen, setModelOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<number>(0)
 
   const handleRemoveItem = async (productId: number) => {
     try {
       const res = await axios.delete(`/api/basket?productId=${productId}`)
-      setBasket(res.data)
+      // setBasket(res.data)
+      removeItem(productId)
       setModelOpen(false)
       setDeleteId(0)
       console.log(res)
@@ -51,7 +47,8 @@ function Basket() {
       }
 
       const res = await axios.put(`/api/basket?productId=${productId}&quantity=${quantity}`)
-      setBasket(res.data)
+      // setBasket(res.data)
+      updateItem(productId, quantity)
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -76,7 +73,7 @@ function Basket() {
     }
 
     fetchBasket()
-  }, [])
+  }, [setBasket])
 
   return (
     <>
@@ -106,63 +103,64 @@ function Basket() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {basket.basketItems.map((row: BasketItem, index) => (
-              <TableRow key={row.productId} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                <TableCell component='th' scope='row' sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                  {index + 1}
-                </TableCell>
-                <TableCell>
-                  <img
-                    src={`/api/file/image/${row.imageUrl}`}
-                    alt='image'
-                    style={{ height: 200, objectFit: 'cover' }}
-                  />
-                </TableCell>
-                <TableCell align='right'>
-                  <Typography variant='h6'>{row.productName}</Typography>
-                  <Typography variant='body2'>{row.categoryName}</Typography>
-                  <Typography variant='body2'>{row.brand}</Typography>
-                </TableCell>
-                <TableCell align='right'>
-                  <IconButton
-                    sx={{ marginRight: 1 }}
-                    onClick={() => handleChangeQuantity(row.productId, row.quantity - 1)}
-                  >
-                    <RemoveIcon color='primary' />
-                  </IconButton>
-                  {row.quantity}
-                  <IconButton
-                    sx={{ marginLeft: 1 }}
-                    onClick={() => handleChangeQuantity(row.productId, row.quantity + 1)}
-                  >
-                    <AddIcon color='primary' />
-                  </IconButton>
-                </TableCell>
-                <TableCell align='right'>
-                  <Typography variant='body2' fontWeight={'bold'} color={indigo[400]}>
-                    ${row.unitPrice}
-                  </Typography>
-                </TableCell>
-                <TableCell align='right'>
-                  <Typography variant='body2' fontWeight={'bold'} color={indigo[600]}>
-                    ${(row.quantity * row.unitPrice).toFixed(2)}
-                  </Typography>
-                </TableCell>
-                <TableCell align='right'>
-                  <Button
-                    variant='outlined'
-                    size='small'
-                    color='secondary'
-                    startIcon={<DeleteIcon />}
-                    onClick={() => handleModalOpen(row.productId)}
-                  >
-                    Remove
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {basket &&
+              basket.basketItems.map((row: BasketItem, index) => (
+                <TableRow key={row.productId} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell component='th' scope='row' sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                    {index + 1}
+                  </TableCell>
+                  <TableCell>
+                    <img
+                      src={`/api/file/image/${row.imageUrl}`}
+                      alt='image'
+                      style={{ height: 200, objectFit: 'cover' }}
+                    />
+                  </TableCell>
+                  <TableCell align='right'>
+                    <Typography variant='h6'>{row.productName}</Typography>
+                    <Typography variant='body2'>{row.categoryName}</Typography>
+                    <Typography variant='body2'>{row.brand}</Typography>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <IconButton
+                      sx={{ marginRight: 1 }}
+                      onClick={() => handleChangeQuantity(row.productId, row.quantity - 1)}
+                    >
+                      <RemoveIcon color='primary' />
+                    </IconButton>
+                    {row.quantity}
+                    <IconButton
+                      sx={{ marginLeft: 1 }}
+                      onClick={() => handleChangeQuantity(row.productId, row.quantity + 1)}
+                    >
+                      <AddIcon color='primary' />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <Typography variant='body2' fontWeight={'bold'} color={indigo[400]}>
+                      ${row.unitPrice}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <Typography variant='body2' fontWeight={'bold'} color={indigo[600]}>
+                      ${(row.quantity * row.unitPrice).toFixed(2)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align='right'>
+                    <Button
+                      variant='outlined'
+                      size='small'
+                      color='secondary'
+                      startIcon={<DeleteIcon />}
+                      onClick={() => handleModalOpen(row.productId)}
+                    >
+                      Remove
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
 
-            {basket.basketItems.length === 0 && (
+            {basket && basket.basketItems.length === 0 && (
               <TableRow>
                 <TableCell colSpan={7} align='center'>
                   <Typography variant='h6' color='textSecondary'>
@@ -172,16 +170,18 @@ function Basket() {
               </TableRow>
             )}
 
-            <TableRow>
-              <TableCell colSpan={4} />
-              <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                Total
-              </TableCell>
-              <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                ${basket.basketItems.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0).toFixed(2)}
-              </TableCell>
-              <TableCell />
-            </TableRow>
+            {basket && (
+              <TableRow>
+                <TableCell colSpan={4} />
+                <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                  Total
+                </TableCell>
+                <TableCell align='right' sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                  ${basket.basketItems.reduce((acc, item) => acc + item.quantity * item.unitPrice, 0).toFixed(2)}
+                </TableCell>
+                <TableCell />
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>

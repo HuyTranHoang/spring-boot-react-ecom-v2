@@ -4,6 +4,7 @@ import { AppBar, Badge, Box, Button, IconButton, Theme, Toolbar, Typography } fr
 import { Link, NavLink } from 'react-router-dom'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
+import { useBaskets } from '../context/BasketContext.tsx'
 
 type NavbarProps = {
   colorMode: { toggleColorMode: () => void }
@@ -17,6 +18,9 @@ const navLinkStyle = {
 }
 
 function Navbar({ colorMode, theme }: NavbarProps) {
+  const {basket} = useBaskets()
+  const itemInCart = basket?.basketItems.length || 0
+
   return (
     <AppBar position='static'>
       <Toolbar>
@@ -60,7 +64,7 @@ function Navbar({ colorMode, theme }: NavbarProps) {
           {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
         </IconButton>
 
-        <Badge badgeContent={4} color='secondary' sx={{ marginRight: '1rem' }} component={Link} to={'/basket'}>
+        <Badge badgeContent={itemInCart} color='secondary' sx={{ marginRight: '1rem' }} component={Link} to={'/basket'}>
           <ShoppingCartIcon sx={{color: 'white'}} />
         </Badge>
 
