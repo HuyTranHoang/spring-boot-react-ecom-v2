@@ -13,6 +13,7 @@ import AppLayout from './ui/AppLayout.tsx'
 import Basket from './features/basket/Basket.tsx'
 import ProductDetails from './features/catalog/ProductDetails.tsx'
 import { BasketsProvider } from './context/BasketContext.tsx'
+import Checkout from './checkout/Checkout.tsx'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path='catalog/:productId' element={<ProductDetails />}></Route>
             <Route path='add-product' element={<ProductForm />}></Route>
             <Route path='basket' element={<Basket />}></Route>
+            <Route path='checkout' element={<Checkout />}></Route>
             <Route path='about' element={<About />}></Route>
             <Route path='contact' element={<Contact />}></Route>
             <Route path='server-error' element={<ServerError />}></Route>

@@ -54,7 +54,7 @@ function CatalogItem({ product }: CatalogItemProps) {
         <Typography sx={{ mb: 1.5 }} color='text.secondary'>
           {product.categoryName}
         </Typography>
-        <CardMedia sx={{ height: 240, objectFit: 'cover' }} image={`/api/file/image/${product.imageUrl}`} />
+        <CardMedia sx={{ height: 360, objectFit: 'cover' }} image={`/api/file/image/${product.imageUrl}`} />
         <TypographyElipsis sx={{ mt: 1.5 }} variant='body2'>
           {product.description}
         </TypographyElipsis>
@@ -66,11 +66,9 @@ function CatalogItem({ product }: CatalogItemProps) {
         </Box>
       </CardContent>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Link to={`/catalog/${product.id}`} style={{ textDecoration: 'none' }}>
-          <Button variant='outlined' size='small'>
-            Details
-          </Button>
-        </Link>
+        <Button variant='outlined' size='small' component={Link} to={`/catalog/${product.id}`}>
+          Details
+        </Button>
         <Button variant='outlined' size='small' disabled={loading} onClick={() => handleAddItem(product.id)}>
           {loading ? 'Adding...' : 'Add to cart'}
         </Button>
