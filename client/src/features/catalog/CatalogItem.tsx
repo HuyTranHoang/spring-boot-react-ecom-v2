@@ -6,7 +6,9 @@ import { useState } from 'react'
 import axios from 'axios'
 import { deepPurple } from '@mui/material/colors'
 import { Link } from 'react-router-dom'
-import { useBaskets } from '../../context/BasketContext.tsx'
+import { useDispatch } from 'react-redux'
+import { addItem } from '../basket/basketSlice.ts'
+import BasketItem from '../../type/basketItem.type.ts'
 
 type CatalogItemProps = {
   product: Product
@@ -29,14 +31,18 @@ const TypographyElipsis = styled(Typography)({
 })
 
 function CatalogItem({ product }: CatalogItemProps) {
-  const { setBasket } = useBaskets()
+  // const { setBasket } = useBaskets()
+  const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
 
   const handleAddItem = async (productId: number) => {
     setLoading(true)
     try {
       const res = await axios.post(`/api/basket?productId=${productId}&quantity=1`, {})
-      setBasket(res.data)
+      // setBasket(res.data)
+      const basketItem = res.data.basketItems.find((item: BasketItem) => item.productId === productId)
+      console.log(basketItem)
+      dispatch(addItem(basketItem))
       console.log(res)
     } catch (error) {
       console.log(error)

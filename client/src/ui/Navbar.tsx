@@ -4,7 +4,11 @@ import { AppBar, Badge, Box, Button, IconButton, Theme, Toolbar, Typography } fr
 import { Link, NavLink } from 'react-router-dom'
 import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
-import { useBaskets } from '../context/BasketContext.tsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getCookie } from '../utils/util.ts'
+import { setBasketItems, setBuyerId } from '../features/basket/basketSlice.ts'
+import axios, { AxiosResponse } from 'axios'
 
 type NavbarProps = {
   colorMode: { toggleColorMode: () => void }
@@ -18,14 +22,41 @@ const navLinkStyle = {
 }
 
 function Navbar({ colorMode, theme }: NavbarProps) {
-  const {basket} = useBaskets()
-  const itemInCart = basket?.basketItems.length || 0
+  // const {basket} = useBaskets()
+
+  const itemInCart = useSelector((state) => state.basket.basketItems.length)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    const buyerId = getCookie('buyerId')
+    console.log('buyer id > ', buyerId)
+    if (buyerId) {
+      axios
+        .get('/api/basket')
+        .then(
+          (response: AxiosResponse) => {
+            dispatch(setBasketItems(response.data.basketItems))
+            dispatch(setBuyerId(buyerId))
+          }
+        )
+        .catch((err) => console.log(err))
+    }
+  }, [dispatch])
 
   return (
     <AppBar position='static'>
       <Toolbar>
-        <Link to='/' style={{ textDecoration: 'none', color: 'inherit', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <StorefrontIcon sx={{ display: { xs: 'none', md: 'flex' }}}/>
+        <Link
+          to='/'
+          style={{
+            textDecoration: 'none',
+            color: 'inherit',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <StorefrontIcon sx={{ display: { xs: 'none', md: 'flex' } }} />
           <Typography
             variant='h6'
             noWrap
@@ -38,7 +69,7 @@ function Navbar({ colorMode, theme }: NavbarProps) {
               textDecoration: 'none'
             }}
           >
-            <span style={{fontWeight: 'bold'}}>book</span>Shop
+            <span style={{ fontWeight: 'bold' }}>book</span>Shop
           </Typography>
         </Link>
 
@@ -65,7 +96,7 @@ function Navbar({ colorMode, theme }: NavbarProps) {
         </IconButton>
 
         <Badge badgeContent={itemInCart} color='secondary' sx={{ marginRight: '1rem' }} component={Link} to={'/basket'}>
-          <ShoppingCartIcon sx={{color: 'white'}} />
+          <ShoppingCartIcon sx={{ color: 'white' }} />
         </Badge>
 
         <Button color='inherit'>Login</Button>

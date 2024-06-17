@@ -11,17 +11,19 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import axios from 'axios'
-import BasketType from '../../type/basket.type.ts'
 import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useBaskets } from '../../context/BasketContext.tsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { selectBasket, removeItem, updateItem } from './basketSlice.ts'
 
 function Basket() {
-  const { basket, setBasket, updateItem, removeItem } = useBaskets()
+  // const { basket, setBasket, updateItem, removeItem } = useBaskets()
+  const basket = useSelector(selectBasket)
+  const dispatch = useDispatch()
   const [modelOpen, setModelOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<number>(0)
 
@@ -29,7 +31,8 @@ function Basket() {
     try {
       const res = await axios.delete(`/api/basket?productId=${productId}`)
       // setBasket(res.data)
-      removeItem(productId)
+      // removeItem(productId)
+      dispatch(removeItem(productId))
       setModelOpen(false)
       setDeleteId(0)
       console.log(res)
@@ -48,7 +51,8 @@ function Basket() {
 
       const res = await axios.put(`/api/basket?productId=${productId}&quantity=${quantity}`)
       // setBasket(res.data)
-      updateItem(productId, quantity)
+      // updateItem(productId, quantity)
+      dispatch(updateItem({ productId, quantity }))
       console.log(res)
     } catch (error) {
       console.log(error)
@@ -65,15 +69,18 @@ function Basket() {
     setDeleteId(0)
   }
 
-  useEffect(() => {
-    async function fetchBasket() {
-      const res = await axios.get<BasketType>('/api/basket')
-      const data = res.data
-      setBasket(data)
-    }
-
-    fetchBasket()
-  }, [setBasket])
+  // useEffect(() => {
+  //   async function fetchBasket() {
+  //     const res = await axios.get<BasketType>('/api/basket')
+  //     const data = res.data
+  //     // setBasket(data)
+  //     console.log(data)
+  //     dispatch(setBasketItems(data.basketItems))
+  //     console.log(basket)
+  //   }
+  //
+  //   fetchBasket()
+  // }, [dispatch])
 
   return (
     <>
