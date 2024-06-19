@@ -12,13 +12,13 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { useState } from 'react'
-import axios from 'axios'
 import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
 import RemoveIcon from '@mui/icons-material/Remove'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectBasket, removeItem, updateItem } from './basketSlice.ts'
+import { removeBasketItem, updateBasketItem } from '../../services/apiBasket.ts'
 
 function Basket() {
   // const { basket, setBasket, updateItem, removeItem } = useBaskets()
@@ -28,35 +28,22 @@ function Basket() {
   const [deleteId, setDeleteId] = useState<number>(0)
 
   const handleRemoveItem = async (productId: number) => {
-    try {
-      const res = await axios.delete(`/api/basket?productId=${productId}`)
-      // setBasket(res.data)
-      // removeItem(productId)
+    removeBasketItem(productId).then(() => {
       dispatch(removeItem(productId))
       setModelOpen(false)
-      setDeleteId(0)
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    }
+    })
   }
 
   const handleChangeQuantity = async (productId: number, quantity: number) => {
-    try {
-      if (quantity < 1) {
-        setModelOpen(true)
-        setDeleteId(productId)
-        return
-      }
-
-      const res = await axios.put(`/api/basket?productId=${productId}&quantity=${quantity}`)
-      // setBasket(res.data)
-      // updateItem(productId, quantity)
-      dispatch(updateItem({ productId, quantity }))
-      console.log(res)
-    } catch (error) {
-      console.log(error)
+    if (quantity < 1) {
+      setModelOpen(true)
+      setDeleteId(productId)
+      return
     }
+
+    updateBasketItem(productId, quantity).then(() => {
+      dispatch(updateItem({ productId, quantity }))
+    })
   }
 
   const handleModalOpen = (deleteId: number) => {

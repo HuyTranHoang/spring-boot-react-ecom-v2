@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { getCookie } from '../utils/util.ts'
 import { setBasketItems, setBuyerId } from '../features/basket/basketSlice.ts'
-import axios, { AxiosResponse } from 'axios'
+import { fetchBasket } from '../services/apiBasket.ts'
 
 type NavbarProps = {
   colorMode: { toggleColorMode: () => void }
@@ -31,15 +31,10 @@ function Navbar({ colorMode, theme }: NavbarProps) {
     const buyerId = getCookie('buyerId')
     console.log('buyer id > ', buyerId)
     if (buyerId) {
-      axios
-        .get('/api/basket')
-        .then(
-          (response: AxiosResponse) => {
-            dispatch(setBasketItems(response.data.basketItems))
-            dispatch(setBuyerId(buyerId))
-          }
-        )
-        .catch((err) => console.log(err))
+      fetchBasket().then((data) => {
+        dispatch(setBasketItems(data.basketItems))
+        dispatch(setBuyerId(buyerId))
+      })
     }
   }, [dispatch])
 

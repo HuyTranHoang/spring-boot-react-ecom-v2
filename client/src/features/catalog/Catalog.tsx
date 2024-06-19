@@ -3,23 +3,18 @@ import { Grid, Paper, Typography } from '@mui/material'
 import CatalogItem from './CatalogItem.tsx'
 import { pink } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
-import axios from 'axios'
 import LoadingComponent from '../../ui/LoadingComponent.tsx'
+import { fetchProducts } from '../../services/apiProduct.ts'
 
 function Catalog() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function fetchProducts() {
-      const res = await axios.get<Product[]>('/api/products/')
-      const data = res.data
+    fetchProducts().then((data) => {
       setProducts(data)
-
       setLoading(false)
-    }
-
-    fetchProducts()
+    })
   }, [])
 
   if (loading) {

@@ -3,12 +3,12 @@ import CardContent from '@mui/material/CardContent'
 import Product from '../../type/product.type.ts'
 import { Box, Button, CardActions, CardMedia, Typography, styled } from '@mui/material'
 import { useState } from 'react'
-import axios from 'axios'
 import { deepPurple } from '@mui/material/colors'
 import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { addItem } from '../basket/basketSlice.ts'
 import BasketItem from '../../type/basketItem.type.ts'
+import { addBasketItem } from '../../services/apiBasket.ts'
 
 type CatalogItemProps = {
   product: Product
@@ -37,18 +37,10 @@ function CatalogItem({ product }: CatalogItemProps) {
 
   const handleAddItem = async (productId: number) => {
     setLoading(true)
-    try {
-      const res = await axios.post(`/api/basket?productId=${productId}&quantity=1`, {})
-      // setBasket(res.data)
-      const basketItem = res.data.basketItems.find((item: BasketItem) => item.productId === productId)
-      console.log(basketItem)
+    addBasketItem(productId).then(data => {
+      const basketItem = data.basketItems.find((item: BasketItem) => item.productId === productId)
       dispatch(addItem(basketItem))
-      console.log(res)
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setLoading(false)
-    }
+    }).finally(() => setLoading(false))
   }
 
   return (

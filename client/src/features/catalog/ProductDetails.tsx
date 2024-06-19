@@ -3,15 +3,20 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Product from '../../type/product.type.ts'
+import { fetchProductById } from '../../services/apiProduct.ts'
 
 function ProductDetails() {
   const {productId} = useParams();
   const [product, setProduct] = useState<Product | null>(null);
 
   useEffect(() => {
-    axios.get(`/api/products/${productId}`)
-      .then(response => setProduct(response.data))
-      .catch(error => console.log(error));
+    if (!productId) return
+
+    const id = parseInt(productId)
+
+    fetchProductById(id).then((data) => {
+      setProduct(data)
+    })
   }, [productId]);
 
 
