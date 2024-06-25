@@ -1,14 +1,15 @@
+import { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { setBasket } from '../features/basket/basketSlice.ts'
+import { Link, NavLink } from 'react-router-dom'
+import { IRootState } from '../store/store.ts'
+import { getCookie } from '../utils/util.ts'
+import { fetchBasket } from '../services/apiBasket.ts'
+import { AppBar, Badge, Box, Button, IconButton, Theme, Toolbar, Typography } from '@mui/material'
 import StorefrontIcon from '@mui/icons-material/Storefront'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
-import { AppBar, Badge, Box, Button, IconButton, Theme, Toolbar, Typography } from '@mui/material'
-import { Link, NavLink } from 'react-router-dom'
-import Brightness4Icon from '@mui/icons-material/Brightness4'
 import Brightness7Icon from '@mui/icons-material/Brightness7'
-import { useDispatch, useSelector } from 'react-redux'
-import { useEffect } from 'react'
-import { getCookie } from '../utils/util.ts'
-import { setBasketItems, setBuyerId } from '../features/basket/basketSlice.ts'
-import { fetchBasket } from '../services/apiBasket.ts'
+import Brightness4Icon from '@mui/icons-material/Brightness4'
 
 type NavbarProps = {
   colorMode: { toggleColorMode: () => void }
@@ -22,9 +23,7 @@ const navLinkStyle = {
 }
 
 function Navbar({ colorMode, theme }: NavbarProps) {
-  // const {basket} = useBaskets()
-
-  const itemInCart = useSelector((state) => state.basket.basketItems.length)
+  const itemInCart = useSelector((state: IRootState) => state.basket.basket.basketItems.length)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -32,8 +31,7 @@ function Navbar({ colorMode, theme }: NavbarProps) {
     console.log('buyer id > ', buyerId)
     if (buyerId) {
       fetchBasket().then((data) => {
-        dispatch(setBasketItems(data.basketItems))
-        dispatch(setBuyerId(buyerId))
+        dispatch(setBasket(data))
       })
     }
   }, [dispatch])

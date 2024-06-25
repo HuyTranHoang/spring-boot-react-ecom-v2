@@ -1,45 +1,44 @@
 import Basket from '../../type/basket.type.ts'
 import { createSlice } from '@reduxjs/toolkit'
+import { IRootState } from '../../store/store.ts'
 
-const initialState: Basket = {
-  id: 0,
-  buyerId: '',
-  basketItems: []
+interface BasketSlice {
+  basket: Basket
+  status: 'idle' | 'loading' | 'failed'
+}
+
+const initialState: BasketSlice = {
+  basket: {
+    id: 0,
+    buyerId: '',
+    basketItems: []
+  },
+  status: 'idle'
 }
 
 const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
-    setBuyerId: (state, action) => {
-      state.buyerId = action.payload
-    },
-    setBasketItems: (state, action) => {
-      state.basketItems = action.payload
-    },
-    addItem: (state, action) => {
-      if (state.basketItems.some((item) => item.productId === action.payload.productId)) {
-        const index = state.basketItems.findIndex((item) => item.productId === action.payload.productId)
-        state.basketItems[index].quantity += 1
-        return
-      }
-
-      state.basketItems.push(action.payload)
+    setBasket: (state, action) => {
+      state.basket = action.payload
     },
     removeItem: (state, action) => {
-      state.basketItems = state.basketItems.filter((item) => item.productId !== action.payload)
+      state.basket.basketItems = state.basket.basketItems.filter((item) => item.productId !== action.payload)
     },
     updateItem: (state, action) => {
-      const index = state.basketItems.findIndex((item) => item.productId === action.payload.productId)
-      state.basketItems[index].quantity = action.payload.quantity
+      const itemIndex = state.basket.basketItems.findIndex((item) => item.productId === action.payload.productId)
+      if (itemIndex > -1) {
+        state.basket.basketItems[itemIndex].quantity = action.payload.quantity
+      }
     },
     clearBasket: (state) => {
-      state.basketItems = []
+      state.basket.basketItems = []
     }
   }
 })
 
-export const { setBuyerId, setBasketItems, addItem, removeItem, updateItem, clearBasket } = basketSlice.actions
+export const { setBasket, removeItem, updateItem, clearBasket } = basketSlice.actions
 export default basketSlice.reducer
 
-export const selectBasket = (state: { basket: Basket }) => state.basket
+export const selectBasket = (state: IRootState) => state.basket.basket

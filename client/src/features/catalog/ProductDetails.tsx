@@ -1,9 +1,8 @@
-import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Product from '../../type/product.type.ts'
+import { useEffect, useState } from "react";
 import { fetchProductById } from '../../services/apiProduct.ts'
+import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import Product from '../../type/product.type.ts'
 
 function ProductDetails() {
   const {productId} = useParams();

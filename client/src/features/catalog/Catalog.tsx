@@ -1,10 +1,10 @@
-import Product from '../../type/product.type.ts'
-import { Grid, Paper, Typography } from '@mui/material'
-import CatalogItem from './CatalogItem.tsx'
-import { pink } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
-import LoadingComponent from '../../ui/LoadingComponent.tsx'
+import { pink } from '@mui/material/colors'
+import { Grid, Paper, Typography } from '@mui/material'
 import { fetchProducts } from '../../services/apiProduct.ts'
+import Product from '../../type/product.type.ts'
+import LoadingComponent from '../../ui/LoadingComponent.tsx'
+import CatalogItem from './CatalogItem.tsx'
 
 function Catalog() {
   const [products, setProducts] = useState<Product[]>([])

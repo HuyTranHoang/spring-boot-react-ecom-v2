@@ -1,14 +1,13 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Product from '../../type/product.type.ts'
-import { Box, Button, CardActions, CardMedia, Typography, styled } from '@mui/material'
 import { useState } from 'react'
-import { deepPurple } from '@mui/material/colors'
-import { Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { addItem } from '../basket/basketSlice.ts'
-import BasketItem from '../../type/basketItem.type.ts'
+import { setBasket } from '../basket/basketSlice.ts'
+import { Link } from 'react-router-dom'
+import { deepPurple } from '@mui/material/colors'
+import { Box, Button, CardActions, CardMedia, Typography, styled } from '@mui/material'
 import { addBasketItem } from '../../services/apiBasket.ts'
+import Product from '../../type/product.type.ts'
+import CardContent from '@mui/material/CardContent'
+import Card from '@mui/material/Card'
 
 type CatalogItemProps = {
   product: Product
@@ -31,15 +30,13 @@ const TypographyElipsis = styled(Typography)({
 })
 
 function CatalogItem({ product }: CatalogItemProps) {
-  // const { setBasket } = useBaskets()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
 
   const handleAddItem = async (productId: number) => {
     setLoading(true)
     addBasketItem(productId).then(data => {
-      const basketItem = data.basketItems.find((item: BasketItem) => item.productId === productId)
-      dispatch(addItem(basketItem))
+      dispatch(setBasket(data))
     }).finally(() => setLoading(false))
   }
 

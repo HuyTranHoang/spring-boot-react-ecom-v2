@@ -1,27 +1,26 @@
-import { Button, IconButton, Paper, Typography } from '@mui/material'
-import { indigo, pink } from '@mui/material/colors'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
 import { useState } from 'react'
-import BasketItem from '../../type/basketItem.type.ts'
-import AddIcon from '@mui/icons-material/Add'
-import RemoveIcon from '@mui/icons-material/Remove'
-import DeleteIcon from '@mui/icons-material/Delete'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectBasket, removeItem, updateItem } from './basketSlice.ts'
 import { removeBasketItem, updateBasketItem } from '../../services/apiBasket.ts'
+import { indigo, pink } from '@mui/material/colors'
+import { Button, IconButton, Paper, Typography } from '@mui/material'
+import TableRow from '@mui/material/TableRow'
+import TableHead from '@mui/material/TableHead'
+import TableContainer from '@mui/material/TableContainer'
+import TableCell from '@mui/material/TableCell'
+import TableBody from '@mui/material/TableBody'
+import Table from '@mui/material/Table'
+import RemoveIcon from '@mui/icons-material/Remove'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import Dialog from '@mui/material/Dialog'
+import DeleteIcon from '@mui/icons-material/Delete'
+import BasketItem from '../../type/basketItem.type.ts'
+import AddIcon from '@mui/icons-material/Add'
 
 function Basket() {
-  // const { basket, setBasket, updateItem, removeItem } = useBaskets()
   const basket = useSelector(selectBasket)
   const dispatch = useDispatch()
   const [modelOpen, setModelOpen] = useState(false)
@@ -55,19 +54,6 @@ function Basket() {
     setModelOpen(false)
     setDeleteId(0)
   }
-
-  // useEffect(() => {
-  //   async function fetchBasket() {
-  //     const res = await axios.get<BasketType>('/api/basket')
-  //     const data = res.data
-  //     // setBasket(data)
-  //     console.log(data)
-  //     dispatch(setBasketItems(data.basketItems))
-  //     console.log(basket)
-  //   }
-  //
-  //   fetchBasket()
-  // }, [dispatch])
 
   return (
     <>
