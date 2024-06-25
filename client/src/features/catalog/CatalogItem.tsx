@@ -62,8 +62,13 @@ function CatalogItem({ product }: CatalogItemProps) {
         <Button variant='outlined' size='small' component={Link} to={`/catalog/${product.id}`}>
           Details
         </Button>
-        <Button variant='outlined' size='small' disabled={status === 'loading'} onClick={() => handleAddItem(product.id)}>
-          {status === 'loading' ? 'Adding...' : 'Add to cart'}
+        <Button
+          variant='outlined'
+          size='small'
+          disabled={status === 'loading'}
+          onClick={() => handleAddItem(product.id)}
+        >
+          {status === 'loading' ? 'Adding...' : 'Add to Cart'}
         </Button>
       </CardActions>
     </Card>

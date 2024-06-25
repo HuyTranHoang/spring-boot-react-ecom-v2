@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { pink } from '@mui/material/colors'
 import { Grid, Paper, Typography } from '@mui/material'
-import { fetchProducts } from '../../services/apiProduct.ts'
-import Product from '../../type/product.type.ts'
 import LoadingComponent from '../../ui/LoadingComponent.tsx'
 import CatalogItem from './CatalogItem.tsx'
+import { useAppDispatch } from '../../store/store.ts'
+import { fetchProductThunk, selectAllProducts, selectCatalogStatus } from './catalogSlice.ts'
+import { useSelector } from 'react-redux'
 
 function Catalog() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
+  const dispatch = useAppDispatch()
+  const products = useSelector(selectAllProducts)
+  const status = useSelector(selectCatalogStatus)
 
   useEffect(() => {
-    fetchProducts().then((data) => {
-      setProducts(data)
-      setLoading(false)
-    })
+    dispatch(fetchProductThunk())
   }, [])
 
-  if (loading) {
+  if (status === 'loading') {
     return <LoadingComponent />
   }
 

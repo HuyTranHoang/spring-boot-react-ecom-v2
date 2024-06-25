@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { selectBasket, removeBasketItemThunk, updateItem, selectBasketStatus } from './basketSlice.ts'
 import { updateBasketItem } from '../../services/apiBasket.ts'
 import { indigo, pink } from '@mui/material/colors'
-import { Button, IconButton, Paper, Typography } from '@mui/material'
+import { Button, Grid, IconButton, Paper, Typography } from '@mui/material'
 import TableRow from '@mui/material/TableRow'
 import TableHead from '@mui/material/TableHead'
 import TableContainer from '@mui/material/TableContainer'
@@ -20,6 +20,8 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
 import { useAppDispatch } from '../../store/store.ts'
+import BasketSummary from './BasketSummary.tsx'
+import { Link } from 'react-router-dom'
 
 function Basket() {
   const basket = useSelector(selectBasket)
@@ -165,6 +167,18 @@ function Basket() {
           </TableBody>
         </Table>
       </TableContainer>
+
+      {basket && basket.basketItems.length > 0 && (
+        <Grid container sx={{ mt: 2 }}>
+          <Grid item xs={6}></Grid>
+          <Grid item xs={6}>
+            <BasketSummary />
+            <Button component={Link} to='/checkout' variant='contained' size='large' fullWidth>
+              Checkout
+            </Button>
+          </Grid>
+        </Grid>
+      )}
 
       <Dialog
         open={modelOpen}

@@ -1,40 +1,37 @@
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { fetchProductById } from '../../services/apiProduct.ts'
-import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material";
+import { useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+
+import { Divider, Grid, Table, TableBody, TableCell, TableContainer, TableRow, Typography } from '@mui/material'
+import { fetchProductByIdThunk, selectProductById } from './catalogSlice.ts'
+import { IRootState, useAppDispatch } from '../../store/store.ts'
 import Product from '../../type/product.type.ts'
+import { useSelector } from 'react-redux'
 
 function ProductDetails() {
-  const {productId} = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const { productId } = useParams()
+  const product: Product = useSelector((state: IRootState) => selectProductById(state, parseInt(productId!)))
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!productId) return
-
     const id = parseInt(productId)
+    dispatch(fetchProductByIdThunk(id))
+  }, [productId])
 
-    fetchProductById(id).then((data) => {
-      setProduct(data)
-    })
-  }, [productId]);
-
-
-  if (!product)
-    return <h3>Product not found</h3>
+  if (!product) return <h3>Product not found</h3>
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={4}>
-        <img
-          src={`/api/file/image/${product?.imageUrl}`}
-          alt={`${product?.name}`}
-        />
+        <img src={`/api/file/image/${product?.imageUrl}`} alt={`${product?.name}`} />
       </Grid>
       <Grid item xs={8}>
-        <Typography variant="h3">{product?.name}</Typography>
-        <Divider sx={{mb: 2}} />
-        <Typography variant="h4" color='secondary' sx={{mb:4}}>${product?.unitPrice.toFixed(2)}</Typography>
-        <Divider sx={{mb: 2}} />
+        <Typography variant='h3'>{product?.name}</Typography>
+        <Divider sx={{ mb: 2 }} />
+        <Typography variant='h4' color='secondary' sx={{ mb: 4 }}>
+          ${product?.unitPrice.toFixed(2)}
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
         <TableContainer>
           <Table>
             <TableBody>
@@ -59,7 +56,7 @@ function ProductDetails() {
         </TableContainer>
       </Grid>
     </Grid>
-  );
+  )
 }
 
 export default ProductDetails
