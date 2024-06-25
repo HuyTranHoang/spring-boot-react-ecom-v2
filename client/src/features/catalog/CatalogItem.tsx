@@ -1,13 +1,12 @@
-import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { setBasket } from '../basket/basketSlice.ts'
+import { useSelector } from 'react-redux'
+import { addBasketItemThunk, selectBasketStatus } from '../basket/basketSlice.ts'
 import { Link } from 'react-router-dom'
 import { deepPurple } from '@mui/material/colors'
 import { Box, Button, CardActions, CardMedia, Typography, styled } from '@mui/material'
-import { addBasketItem } from '../../services/apiBasket.ts'
 import Product from '../../type/product.type.ts'
 import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
+import { useAppDispatch } from '../../store/store.ts'
 
 type CatalogItemProps = {
   product: Product
@@ -30,14 +29,13 @@ const TypographyElipsis = styled(Typography)({
 })
 
 function CatalogItem({ product }: CatalogItemProps) {
-  const dispatch = useDispatch()
-  const [loading, setLoading] = useState(false)
+  const dispatch = useAppDispatch()
+  const status = useSelector(selectBasketStatus)
 
   const handleAddItem = async (productId: number) => {
-    setLoading(true)
-    addBasketItem(productId).then(data => {
-      dispatch(setBasket(data))
-    }).finally(() => setLoading(false))
+    if (status === 'idle') {
+      dispatch(addBasketItemThunk(productId))
+    }
   }
 
   return (
@@ -64,8 +62,8 @@ function CatalogItem({ product }: CatalogItemProps) {
         <Button variant='outlined' size='small' component={Link} to={`/catalog/${product.id}`}>
           Details
         </Button>
-        <Button variant='outlined' size='small' disabled={loading} onClick={() => handleAddItem(product.id)}>
-          {loading ? 'Adding...' : 'Add to cart'}
+        <Button variant='outlined' size='small' disabled={status === 'loading'} onClick={() => handleAddItem(product.id)}>
+          {status === 'loading' ? 'Adding...' : 'Add to cart'}
         </Button>
       </CardActions>
     </Card>

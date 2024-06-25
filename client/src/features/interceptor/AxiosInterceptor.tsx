@@ -9,9 +9,7 @@ function AxiosInterceptor() {
 
   useEffect(() => {
     axios.interceptors.response.use(
-      (response) => {
-        return response
-      },
+      (response) => response,
       (error: AxiosError) => {
         switch (error.response?.status) {
           case 400:

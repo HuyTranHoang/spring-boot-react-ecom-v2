@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { selectBasket, removeItem, updateItem } from './basketSlice.ts'
-import { removeBasketItem, updateBasketItem } from '../../services/apiBasket.ts'
+import { useSelector } from 'react-redux'
+import { selectBasket, removeBasketItemThunk, updateItem, selectBasketStatus } from './basketSlice.ts'
+import { updateBasketItem } from '../../services/apiBasket.ts'
 import { indigo, pink } from '@mui/material/colors'
 import { Button, IconButton, Paper, Typography } from '@mui/material'
 import TableRow from '@mui/material/TableRow'
@@ -19,18 +19,18 @@ import Dialog from '@mui/material/Dialog'
 import DeleteIcon from '@mui/icons-material/Delete'
 import BasketItem from '../../type/basketItem.type.ts'
 import AddIcon from '@mui/icons-material/Add'
+import { useAppDispatch } from '../../store/store.ts'
 
 function Basket() {
   const basket = useSelector(selectBasket)
-  const dispatch = useDispatch()
+  const status = useSelector(selectBasketStatus)
+  const dispatch = useAppDispatch()
   const [modelOpen, setModelOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<number>(0)
 
   const handleRemoveItem = async (productId: number) => {
-    removeBasketItem(productId).then(() => {
-      dispatch(removeItem(productId))
-      setModelOpen(false)
-    })
+    dispatch(removeBasketItemThunk(productId))
+    setModelOpen(false)
   }
 
   const handleChangeQuantity = async (productId: number, quantity: number) => {
@@ -134,7 +134,7 @@ function Basket() {
                       startIcon={<DeleteIcon />}
                       onClick={() => handleModalOpen(row.productId)}
                     >
-                      Remove
+                      {status === 'loading' && row.productId === deleteId ? 'Removing...' : 'Remove'}
                     </Button>
                   </TableCell>
                 </TableRow>
