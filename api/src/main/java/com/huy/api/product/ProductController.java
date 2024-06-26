@@ -82,4 +82,11 @@ public class ProductController {
         productService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(defaultValue = "all") String name,
+                                                           @RequestParam(defaultValue = "all") String brand,
+                                                           @RequestParam(defaultValue = "all") String categoryName) {
+        return ResponseEntity.ok(productService.search(name, brand, categoryName));
+    }
 }
