@@ -86,7 +86,10 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(defaultValue = "all") String name,
                                                            @RequestParam(defaultValue = "all") String brand,
-                                                           @RequestParam(defaultValue = "all") String categoryName) {
-        return ResponseEntity.ok(productService.search(name, brand, categoryName));
+                                                           @RequestParam(defaultValue = "all") String categoryName,
+                                                           @RequestParam(defaultValue = "0") int pageNumber,
+                                                           @RequestParam(defaultValue = "10") int pageSize,
+                                                           @RequestParam(defaultValue = "id") String sortBy) {
+        return ResponseEntity.ok(productService.search(name, brand, categoryName, pageNumber, pageSize, sortBy));
     }
 }

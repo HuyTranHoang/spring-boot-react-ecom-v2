@@ -1,11 +1,17 @@
 package com.huy.api.product;
 
 import com.huy.api.category.CategoryRepository;
+import com.huy.api.common.PageInfo;
 import com.huy.api.product.dto.ProductDto;
 import com.huy.api.product.mapper.ProductMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -57,14 +63,40 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDto> search(String name, String brand, String categoryName) {
+    public Page<ProductDto> search(String name, String brand, String categoryName, int pageNumber, int pageSize, String sortBy) {
         Specification<Product> spec = Specification.where(productSpecification.searchByName(name))
                 .and(productSpecification.filterByBrand(brand))
                 .and(productSpecification.filterByCategoryName(categoryName, categoryRepository));
 
-        return productRepository.findAll(spec)
-                .stream()
+        Sort sort = switch (sortBy) {
+            case "priceAsc" -> Sort.by(Sort.Order.asc("price"));
+            case "priceDesc" -> Sort.by(Sort.Order.desc("price"));
+            default -> Sort.by(Sort.Order.asc("id"));
+        };
+
+        Pageable pageable = PageRequest.of(
+                pageNumber,
+                pageSize,
+                sort
+        );
+
+        Page<Product> productPage = productRepository.findAll(spec, pageable);
+
+        PageInfo pageInfo = new PageInfo(
+                productPage.getNumber(),
+                productPage.getTotalElements(),
+                productPage.getTotalPages(),
+                productPage.getSize()
+        );
+
+        List<ProductDto> productDtoList = productPage.stream()
                 .map(productMapper::toProductDto)
                 .toList();
+
+        HashMap<String, Object> meta = new HashMap<>();
+        meta.put("pageInfo", pageInfo);
+        meta.put("data", productDtoList)
+
+        return meta;
     }
 }
