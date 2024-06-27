@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -84,12 +85,12 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<ProductDto>> searchProducts(@RequestParam(defaultValue = "all") String name,
-                                                           @RequestParam(defaultValue = "all") String brand,
-                                                           @RequestParam(defaultValue = "all") String categoryName,
-                                                           @RequestParam(defaultValue = "0") int pageNumber,
-                                                           @RequestParam(defaultValue = "10") int pageSize,
-                                                           @RequestParam(defaultValue = "id") String sortBy) {
+    public ResponseEntity<Map<String, Object>> searchProducts(@RequestParam(defaultValue = "all") String name,
+                                                              @RequestParam(defaultValue = "all") String brand,
+                                                              @RequestParam(defaultValue = "all") String categoryName,
+                                                              @RequestParam(defaultValue = "0") int pageNumber,
+                                                              @RequestParam(defaultValue = "10") int pageSize,
+                                                              @RequestParam(defaultValue = "id") String sortBy) {
         return ResponseEntity.ok(productService.search(name, brand, categoryName, pageNumber, pageSize, sortBy));
     }
 }

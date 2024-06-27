@@ -4,6 +4,7 @@ import com.huy.api.product.dto.ProductDto;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     List<ProductDto> findAll();
@@ -16,5 +17,5 @@ public interface ProductService {
 
     void deleteById(Long id);
 
-    Page<ProductDto> search(String name, String brand, String CategoryName, int pageNumber, int pageSize, String sortBy);
+    Map<String, Object> search(String name, String brand, String CategoryName, int pageNumber, int pageSize, String sortBy);
 }

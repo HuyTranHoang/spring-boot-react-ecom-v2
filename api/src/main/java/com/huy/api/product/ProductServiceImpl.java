@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -63,7 +64,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductDto> search(String name, String brand, String categoryName, int pageNumber, int pageSize, String sortBy) {
+    public Map<String, Object> search(String name, String brand, String categoryName, int pageNumber, int pageSize, String sortBy) {
         Specification<Product> spec = Specification.where(productSpecification.searchByName(name))
                 .and(productSpecification.filterByBrand(brand))
                 .and(productSpecification.filterByCategoryName(categoryName, categoryRepository));
@@ -93,10 +94,10 @@ public class ProductServiceImpl implements ProductService {
                 .map(productMapper::toProductDto)
                 .toList();
 
-        HashMap<String, Object> meta = new HashMap<>();
-        meta.put("pageInfo", pageInfo);
-        meta.put("data", productDtoList)
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("pageInfo", pageInfo);
+        response.put("data", productDtoList);
 
-        return meta;
+        return response;
     }
 }
