@@ -1,6 +1,7 @@
 package com.huy.api.product;
 
 import com.huy.api.product.dto.ProductDto;
+import com.huy.api.product.dto.ProductParams;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,5 +18,5 @@ public interface ProductService {
 
     void deleteById(Long id);
 
-    Map<String, Object> search(String name, String brand, String CategoryName, int pageNumber, int pageSize, String sortBy);
+    Map<String, Object> search(ProductParams productParams);
 }

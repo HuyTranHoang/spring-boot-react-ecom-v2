@@ -3,6 +3,7 @@ package com.huy.api.product;
 import com.huy.api.category.CategoryRepository;
 import com.huy.api.common.PageInfo;
 import com.huy.api.product.dto.ProductDto;
+import com.huy.api.product.dto.ProductParams;
 import com.huy.api.product.mapper.ProductMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,20 +65,20 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Map<String, Object> search(String name, String brand, String categoryName, int pageNumber, int pageSize, String sortBy) {
-        Specification<Product> spec = Specification.where(productSpecification.searchByName(name))
-                .and(productSpecification.filterByBrand(brand))
-                .and(productSpecification.filterByCategoryName(categoryName, categoryRepository));
+    public Map<String, Object> search(ProductParams productParams) {
+        Specification<Product> spec = Specification.where(productSpecification.searchByName(productParams.getName()))
+                .and(productSpecification.filterByBrand(productParams.getBrand()))
+                .and(productSpecification.filterByCategoryName(productParams.getCategoryName(), categoryRepository));
 
-        Sort sort = switch (sortBy) {
+        Sort sort = switch (productParams.getSortBy()) {
             case "priceAsc" -> Sort.by(Sort.Order.asc("price"));
             case "priceDesc" -> Sort.by(Sort.Order.desc("price"));
             default -> Sort.by(Sort.Order.asc("id"));
         };
 
         Pageable pageable = PageRequest.of(
-                pageNumber,
-                pageSize,
+                productParams.getPageNumber(),
+                productParams.getPageSize(),
                 sort
         );
 

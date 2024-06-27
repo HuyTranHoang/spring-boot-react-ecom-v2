@@ -15,15 +15,18 @@ import java.util.List;
 @Component
 public class ProductSpecification {
     public Specification<Product> searchByName(String name) {
-        return (root, query, cb) -> name.equals("all")
-                ? cb.conjunction()
-                : cb.like(root.get(Product_.NAME), "%" + name + "%");
+        return ((root, query, cb) -> {
+            if (name == null || name.isBlank())
+                return cb.conjunction();
+
+            return cb.like(cb.lower(root.get(Product_.NAME)), "%" + name.toLowerCase() + "%");
+        });
     }
 
     public Specification<Product> filterByBrand(String brandList) {
         return ((root, query, cb) -> {
 
-            if (brandList.equals("all"))
+            if (brandList == null || brandList.isBlank())
                 return cb.conjunction();
 
             List<Predicate> predicates = new ArrayList<>();
@@ -38,7 +41,7 @@ public class ProductSpecification {
 
     public Specification<Product> filterByCategoryName(String categoryList, CategoryRepository categoryRepository) {
         return ((root, query, cb) -> {
-            if (categoryList.equals("all"))
+            if (categoryList == null || categoryList.isBlank())
                 return cb.conjunction();
 
             Join<Product, Category> productCategoryJoin = root.join("category");

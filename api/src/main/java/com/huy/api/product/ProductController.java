@@ -1,6 +1,7 @@
 package com.huy.api.product;
 
 import com.huy.api.product.dto.ProductDto;
+import com.huy.api.product.dto.ProductParams;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.bind.annotation.*;
@@ -85,12 +86,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String, Object>> searchProducts(@RequestParam(defaultValue = "all") String name,
-                                                              @RequestParam(defaultValue = "all") String brand,
-                                                              @RequestParam(defaultValue = "all") String categoryName,
-                                                              @RequestParam(defaultValue = "0") int pageNumber,
-                                                              @RequestParam(defaultValue = "10") int pageSize,
-                                                              @RequestParam(defaultValue = "id") String sortBy) {
-        return ResponseEntity.ok(productService.search(name, brand, categoryName, pageNumber, pageSize, sortBy));
+    public ResponseEntity<Map<String, Object>> searchProducts(@ModelAttribute ProductParams productParams) {
+        return ResponseEntity.ok(productService.search(productParams));
     }
 }
