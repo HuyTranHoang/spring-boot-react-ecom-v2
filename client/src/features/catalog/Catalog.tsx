@@ -3,14 +3,12 @@ import { pink } from '@mui/material/colors'
 import { Grid, Paper, Typography } from '@mui/material'
 import LoadingComponent from '../../ui/LoadingComponent.tsx'
 import CatalogItem from './CatalogItem.tsx'
-import { useAppDispatch } from '../../store/store.ts'
+import { IRootState, useAppDispatch } from '../../store/store.ts'
 import {
   fetchBrandAndCategoryForFilterThunk,
   fetchProductThunk,
   selectAllProducts,
-  selectBrands,
   selectCatalogStatus,
-  selectCategories
 } from './catalogSlice.ts'
 import { useSelector } from 'react-redux'
 
@@ -18,15 +16,15 @@ function Catalog() {
   const dispatch = useAppDispatch()
   const products = useSelector(selectAllProducts)
 
-  const brands = useSelector(selectBrands)
-  const categories = useSelector(selectCategories)
+  const { productLoaded, filtersLoaded , brands, categories} = useSelector((state: IRootState) => state.catalog)
 
   const status = useSelector(selectCatalogStatus)
 
   useEffect(() => {
-    dispatch(fetchProductThunk())
-    dispatch(fetchBrandAndCategoryForFilterThunk())
-  }, [])
+    if (!productLoaded) dispatch(fetchProductThunk())
+
+    if (!filtersLoaded) dispatch(fetchBrandAndCategoryForFilterThunk())
+  }, [dispatch, filtersLoaded, productLoaded])
 
   if (status === 'loading') {
     return <LoadingComponent />
