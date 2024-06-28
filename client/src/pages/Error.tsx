@@ -1,6 +1,6 @@
 import { Alert, AlertTitle, Button, ButtonGroup, Container, List, ListItem, ListItemText, Typography } from "@mui/material";
-import axios from 'axios'
 import { useState } from "react";
+import axiosInstance from '../features/interceptor/AxiosInstance.ts'
 
 function Error() {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -10,7 +10,7 @@ function Error() {
 
   const ValidateErrorHandling = async () => {
     try {
-      await axios.post('/api/buggy/validate-error', {name: 'e', email: 'few'}, config);
+      await axiosInstance.post('/api/buggy/validate-error', {name: 'e', email: 'few'}, config);
     } catch (errors) {
       console.log(errors);
       setValidationErrors(errors);
@@ -18,7 +18,7 @@ function Error() {
   }
   const Error404Handling = async () => {
     try {
-      const res = await axios.get('/api/buggy/404')
+      const res = await axiosInstance.get('/api/buggy/404')
       console.log(res.data)
     } catch (error) {
       console.log(error.response.data)
@@ -27,7 +27,7 @@ function Error() {
 
   const Error500Handling = async () => {
     try {
-      const res = await axios.get('/api/buggy/500')
+      const res = await axiosInstance.get('/api/buggy/500')
       console.log(res.data)
     } catch (error) {
       console.log(error.response)

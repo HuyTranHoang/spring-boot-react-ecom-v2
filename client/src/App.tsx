@@ -8,7 +8,6 @@ import Contact from './pages/Contact.tsx'
 import NotFound from './features/error/NotFound.tsx'
 import { ToastContainer } from 'react-toastify'
 import ServerError from './features/error/ServerError.tsx'
-import AxiosInterceptor from './features/interceptor/AxiosInterceptor.tsx'
 import AppLayout from './ui/AppLayout.tsx'
 import Basket from './features/basket/Basket.tsx'
 import ProductDetails from './features/catalog/ProductDetails.tsx'
@@ -22,7 +21,6 @@ function App() {
     <BrowserRouter>
       <CssBaseline />
       <ToastContainer />
-      <AxiosInterceptor />
       <Routes>
         <Route element={<AppLayout />}>
           <Route path='/' element={<HomePage />}></Route>
