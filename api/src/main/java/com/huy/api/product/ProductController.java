@@ -89,4 +89,9 @@ public class ProductController {
     public ResponseEntity<Map<String, Object>> searchProducts(@ModelAttribute ProductParams productParams) {
         return ResponseEntity.ok(productService.search(productParams));
     }
+
+    @GetMapping("/get-filter-options")
+    public ResponseEntity<Map<String, Object>> getProductFilterOptions() {
+        return ResponseEntity.ok(productService.getFilterOptions());
+    }
 }

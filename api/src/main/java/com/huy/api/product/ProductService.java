@@ -19,4 +19,6 @@ public interface ProductService {
     void deleteById(Long id);
 
     Map<String, Object> search(ProductParams productParams);
+
+    Map<String, Object> getFilterOptions();
 }

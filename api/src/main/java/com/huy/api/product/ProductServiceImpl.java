@@ -101,4 +101,16 @@ public class ProductServiceImpl implements ProductService {
 
         return response;
     }
+
+    @Override
+    public Map<String, Object> getFilterOptions() {
+        List<String> brands = productRepository.getBrands();
+        List<String> categories = categoryRepository.getCategoriesName();
+
+        HashMap<String, Object> response = new HashMap<>();
+        response.put("brands", brands);
+        response.put("categories", categories);
+
+        return response;
+    }
 }
