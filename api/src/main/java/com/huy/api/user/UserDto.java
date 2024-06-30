@@ -48,5 +48,15 @@ public class UserDto {
 
     @Transient
     @JsonIgnore
+    @NotEmpty(message = "Active status are required")
+    private String stringIsActive;
+
+    @Transient
+    @JsonIgnore
+    @NotEmpty(message = "Locked status are required")
+    private String stringIsLocked;
+
+    @Transient
+    @JsonIgnore
     private MultipartFile image;
 }

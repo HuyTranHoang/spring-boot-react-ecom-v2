@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto userDto) throws IOException {
         User user = userMapper.toUser(userDto);
 
+        user.setActive(userDto.getStringIsActive().equals("true"));
+        user.setLocked(userDto.getStringIsLocked().equals("true"));
+
         List<Role> roles = getRoleList(userDto.getRoles());
         user.setRoles(roles);
 
@@ -67,6 +70,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         userMapper.updateFromDto(userDto, user);
+
+        user.setActive(userDto.getStringIsActive().equals("true"));
+        user.setLocked(userDto.getStringIsLocked().equals("true"));
 
         List<Role> roles = getRoleList(userDto.getRoles());
         user.setRoles(roles);

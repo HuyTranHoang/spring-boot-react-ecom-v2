@@ -1,5 +1,6 @@
 package com.huy.api.user;
 
+import com.huy.api.common.email.EmailSenderService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final EmailSenderService emailSenderService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, EmailSenderService emailSenderService) {
         this.userService = userService;
+        this.emailSenderService = emailSenderService;
     }
 
     @GetMapping({"", "/"})
@@ -29,7 +32,22 @@ public class UserController {
 
     @PostMapping({"", "/"})
     public ResponseEntity<UserDto> createUser(@ModelAttribute @Valid UserDto userDto) throws IOException {
-        return ResponseEntity.ok(userService.createUser(userDto));
+        UserDto user = userService.createUser(userDto);
+
+        if (user != null) {
+            String template = """
+                    Welcome to our website
+                    Here is your account information:
+                    Username: %s
+                    Password: %s
+                    Email: %s
+                    """;
+
+            String context = String.format(template, user.getUsername(), user.getPassword(), user.getEmail());
+            emailSenderService.sendEmail(user.getEmail(), "Welcome to our website", context);
+        }
+
+        return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
