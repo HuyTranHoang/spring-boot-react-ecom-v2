@@ -30,4 +30,22 @@ public class FileController {
             throw new RuntimeException(e);
         }
     }
+
+    @GetMapping(value = "/avatar/{fileName}", produces = MediaType.IMAGE_JPEG_VALUE)
+    @ResponseBody
+    public ResponseEntity<byte[]> getAvatar(@PathVariable String fileName) {
+        try {
+            Path path = Path.of("upload/images/profile/" + fileName);
+            Resource resource = new UrlResource(path.toUri());
+            byte[] data = resource.getInputStream().readAllBytes();
+
+            if (data.length == 0) {
+                throw new RuntimeException("File not found");
+            }
+
+            return ResponseEntity.ok().body(data);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

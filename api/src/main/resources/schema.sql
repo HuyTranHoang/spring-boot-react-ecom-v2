@@ -44,3 +44,36 @@ CREATE TABLE IF NOT EXISTS basket_item
     CONSTRAINT fk_basket_item_product FOREIGN KEY (product_id) REFERENCES product (id),
     CONSTRAINT fk_basket_item_basket FOREIGN KEY (basket_id) REFERENCES basket (id)
 );
+
+DROP TABLE IF EXISTS user;
+CREATE TABLE IF NOT EXISTS user
+(
+    id         BIGINT(20) NOT NULL AUTO_INCREMENT,
+    last_name  VARCHAR(255) DEFAULT NULL,
+    first_name VARCHAR(255) DEFAULT NULL,
+    username   VARCHAR(255) DEFAULT NULL,
+    email      VARCHAR(255) DEFAULT NULL,
+    password   VARCHAR(255) DEFAULT NULL,
+    avatar     VARCHAR(255) DEFAULT NULL,
+    is_active  TINYINT(1)   DEFAULT 1,
+    is_locked  TINYINT(1)   DEFAULT 0,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS role;
+CREATE TABLE IF NOT EXISTS role
+(
+    id   BIGINT(20) NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) DEFAULT NULL,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS user_role;
+CREATE TABLE IF NOT EXISTS user_role
+(
+    user_id BIGINT(20) NOT NULL,
+    role_id BIGINT(20) NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user_role_user FOREIGN KEY (user_id) REFERENCES user (id),
+    CONSTRAINT fk_user_role_role FOREIGN KEY (role_id) REFERENCES role (id)
+);
