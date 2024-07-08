@@ -13,5 +13,7 @@ public interface UserService {
 
     UserDto updateUser(long id, UserDto userDto) throws IOException;
 
+    UserDto resetPassword(String email) throws IOException;
+
     void deleteUser(long id) throws IOException;
 }

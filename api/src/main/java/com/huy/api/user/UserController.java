@@ -55,6 +55,24 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUser(id, userDto));
     }
 
+    @PutMapping("/reset-password")
+    public ResponseEntity<UserDto> resetPassword(@RequestBody String email) throws IOException {
+        UserDto user = userService.resetPassword(email);
+
+        if (user != null) {
+            String template = """
+                    Your password has been reset
+                    Here is your new password:
+                    Password: %s
+                    """;
+
+            String context = String.format(template, user.getPassword());
+            emailSenderService.sendEmail(user.getEmail(), "Reset password", context);
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable long id) throws IOException {
         userService.deleteUser(id);

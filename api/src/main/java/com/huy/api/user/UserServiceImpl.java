@@ -88,6 +88,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto resetPassword(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        String newPassword = UUID.randomUUID().toString().substring(0, 8);
+        user.setPassword(newPassword);
+
+        userRepository.save(user);
+        return userMapper.toUserDto(user);
+    }
+
+    @Override
     public void deleteUser(long id) throws IOException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
