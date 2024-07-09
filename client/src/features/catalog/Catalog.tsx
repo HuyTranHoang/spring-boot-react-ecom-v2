@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Box, Grid, Pagination, Typography } from '@mui/material'
+import { Grid } from '@mui/material'
 import LoadingComponent from '../../ui/LoadingComponent.tsx'
 import CatalogItem from './CatalogItem.tsx'
 import { IRootState, useAppDispatch } from '../../store/store.ts'
@@ -7,10 +7,12 @@ import {
   fetchBrandAndCategoryForFilterThunk,
   fetchProductThunk,
   selectAllProducts,
-  selectCatalogStatus
+  selectCatalogStatus,
+  setProductParams
 } from './catalogSlice.ts'
 import { useSelector } from 'react-redux'
 import CatalogFilter from './CatalogFilter.tsx'
+import PaginationComponent from '../../ui/PaginationComponent.tsx'
 
 const sortOptions = [
   { value: 'name', label: 'Alphabetical' },
@@ -22,7 +24,7 @@ function Catalog() {
   const dispatch = useAppDispatch()
   const products = useSelector(selectAllProducts)
 
-  const { productLoaded, filtersLoaded, brands, categories, productParams } = useSelector(
+  const { productLoaded, filtersLoaded, brands, categories, productParams, pagination } = useSelector(
     (state: IRootState) => state.catalog
   )
 
@@ -61,10 +63,10 @@ function Catalog() {
 
       <Grid item xs={3} />
       <Grid item xs={9}>
-        <Box display='flex' justifyContent='space-between' alignContent='content'>
-          <Typography>Display 1-6 of 20 items</Typography>
-          <Pagination color='primary' count={10} page={2} />
-        </Box>
+        <PaginationComponent
+          pagination={pagination}
+          onPageChange={(page: number) => dispatch(setProductParams({ pageNumber: page }))}
+        />
       </Grid>
     </Grid>
   )

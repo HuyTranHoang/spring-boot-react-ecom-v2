@@ -2,6 +2,12 @@ import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/too
 import axios from 'axios'
 import Product, { ProductParams } from '../../type/product.type.ts'
 import { IRootState } from '../../store/store.ts'
+import { PaginationResponse } from '../../type/pagination.type.ts'
+
+interface fetchProductResponse {
+  data: Product[]
+  pageInfo: PaginationResponse
+}
 
 interface entityAdapterState {
   status: 'idle' | 'loading' | 'failed'
@@ -10,6 +16,7 @@ interface entityAdapterState {
   categories: string[]
   filtersLoaded: boolean
   productParams: ProductParams
+  pagination: PaginationResponse
 }
 
 const initialState: entityAdapterState = {
@@ -22,12 +29,18 @@ const initialState: entityAdapterState = {
     sort: 'name',
     pageNumber: 1,
     pageSize: 6
+  },
+  pagination: {
+    number: 0,
+    totalElements: 0,
+    totalPages: 0,
+    size: 0
   }
 }
 
 export const productAdapter = createEntityAdapter<Product>()
 
-export const fetchProductThunk = createAsyncThunk<Product[]>('catalog/fetchProducts', async (_, thunkAPI) => {
+export const fetchProductThunk = createAsyncThunk<fetchProductResponse>('catalog/fetchProducts', async (_, thunkAPI) => {
   try {
     const state = thunkAPI.getState() as IRootState
 
@@ -41,14 +54,14 @@ export const fetchProductThunk = createAsyncThunk<Product[]>('catalog/fetchProdu
       params.append('name', state.catalog.productParams.name)
     }
     if (state.catalog.productParams.categoryName) {
-      params.append('category', state.catalog.productParams.categoryName.toString())
+      params.append('categoryName', state.catalog.productParams.categoryName.toString())
     }
     if (state.catalog.productParams.brand) {
       params.append('brand', state.catalog.productParams.brand.toString())
     }
 
     const response = await axios.get('/api/products/search', { params: params })
-    return response.data.data
+    return response.data
   } catch (err) {
     console.log(err)
   }
@@ -98,7 +111,8 @@ const catalogSlice = createSlice({
     builder.addCase(fetchProductThunk.fulfilled, (state, action) => {
       state.status = 'idle'
       state.productLoaded = true
-      productAdapter.setAll(state, action.payload)
+      productAdapter.setAll(state, action.payload.data)
+      state.pagination = action.payload.pageInfo
     })
     builder.addCase(fetchProductThunk.rejected, (state) => {
       state.status = 'idle'

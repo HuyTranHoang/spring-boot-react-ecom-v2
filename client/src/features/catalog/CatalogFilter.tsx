@@ -1,8 +1,6 @@
 import {
-  Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup,
   FormLabel,
   Paper,
   Radio,
@@ -12,6 +10,7 @@ import {
 import { ProductParams } from '../../type/product.type.ts'
 import { useAppDispatch } from '../../store/store.ts'
 import { setProductParams } from './catalogSlice.ts'
+import CheckboxButton from '../../ui/CheckboxButton.tsx'
 
 interface CatalogFilterProps {
   brands: string[]
@@ -46,18 +45,18 @@ function CatalogFilter({ brands, categories, sortOptions, productParams }: Catal
         </FormControl>
       </Paper>
       <Paper sx={{ mb: 2, p: 2 }}>
-        <FormGroup>
-          {categories.map((category: string) => (
-            <FormControlLabel label={category} key={category} control={<Checkbox />} />
-          ))}
-        </FormGroup>
+        <CheckboxButton
+          items={categories}
+          currentChecked={productParams.categoryName}
+          onChange={(items: string[]) => dispatch(setProductParams({categoryName: items}))}
+        />
       </Paper>
       <Paper sx={{ mb: 2, p: 2 }}>
-        <FormGroup>
-          {brands.map((brand: string) => (
-            <FormControlLabel label={brand} key={brand} control={<Checkbox />} />
-          ))}
-        </FormGroup>
+        <CheckboxButton
+          items={brands}
+          currentChecked={productParams.brand}
+          onChange={(items: string[]) => dispatch(setProductParams({brand: items}))}
+        />
       </Paper>
     </>
   )

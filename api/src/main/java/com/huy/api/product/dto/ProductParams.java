@@ -9,7 +9,7 @@ public class ProductParams {
     private String name;
     private String brand;
     private String categoryName;
-    private int pageNumber;
-    private int pageSize;
-    private String sort;
+    private int pageNumber = 0;
+    private int pageSize = 6;
+    private String sort = "id";
 }
