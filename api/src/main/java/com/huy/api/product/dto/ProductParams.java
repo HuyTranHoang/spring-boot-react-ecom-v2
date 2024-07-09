@@ -11,5 +11,5 @@ public class ProductParams {
     private String categoryName;
     private int pageNumber;
     private int pageSize;
-    private String sortBy;
+    private String sort;
 }

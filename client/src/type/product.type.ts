@@ -9,3 +9,12 @@ export default interface Product {
   categoryId: number
   categoryName: string
 }
+
+export interface ProductParams {
+  name? : string;
+  brand?: string[];
+  categoryName?: string[];
+  pageNumber: number;
+  pageSize: number;
+  sort: string;
+}

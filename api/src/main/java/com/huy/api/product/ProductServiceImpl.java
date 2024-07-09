@@ -70,10 +70,10 @@ public class ProductServiceImpl implements ProductService {
                 .and(productSpecification.filterByBrand(productParams.getBrand()))
                 .and(productSpecification.filterByCategoryName(productParams.getCategoryName(), categoryRepository));
 
-        Sort sort = switch (productParams.getSortBy()) {
-            case "priceAsc" -> Sort.by(Sort.Order.asc("price"));
-            case "priceDesc" -> Sort.by(Sort.Order.desc("price"));
-            default -> Sort.by(Sort.Order.asc("id"));
+        Sort sort = switch (productParams.getSort()) {
+            case "priceAsc" -> Sort.by(Sort.Order.asc(Product_.UNIT_PRICE));
+            case "priceDesc" -> Sort.by(Sort.Order.desc(Product_.UNIT_PRICE));
+            default -> Sort.by(Sort.Order.asc(Product_.ID));
         };
 
         Pageable pageable = PageRequest.of(
