@@ -21,7 +21,7 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username:
+    username: huy.th878@aptechlearning.edu.vn
     password: ivyuiosiserxuxce
     properties.mail.smtp:
       auth: true

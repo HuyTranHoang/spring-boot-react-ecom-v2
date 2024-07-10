@@ -7,7 +7,7 @@ import {
   fetchBrandAndCategoryForFilterThunk,
   fetchProductThunk,
   selectAllProducts,
-  selectCatalogStatus,
+  selectCatalogStatus, setPageNumber,
   setProductParams
 } from './catalogSlice.ts'
 import { useSelector } from 'react-redux'
@@ -65,7 +65,7 @@ function Catalog() {
       <Grid item xs={9}>
         <PaginationComponent
           pagination={pagination}
-          onPageChange={(page: number) => dispatch(setProductParams({ pageNumber: page }))}
+          onPageChange={(page: number) => dispatch(setPageNumber(page))}
         />
       </Grid>
     </Grid>

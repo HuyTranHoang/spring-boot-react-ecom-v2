@@ -1,81 +1,9 @@
 package com.huy.api.user;
 
-import com.huy.api.common.email.EmailSenderService;
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
-
-    private final UserService userService;
-    private final EmailSenderService emailSenderService;
-
-    public UserController(UserService userService, EmailSenderService emailSenderService) {
-        this.userService = userService;
-        this.emailSenderService = emailSenderService;
-    }
-
-    @GetMapping({"", "/"})
-    public ResponseEntity<List<UserDto>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
-    @PostMapping({"", "/"})
-    public ResponseEntity<UserDto> createUser(@ModelAttribute @Valid UserDto userDto) throws IOException {
-        UserDto user = userService.createUser(userDto);
-
-        if (user != null) {
-            String template = """
-                    Welcome to our website
-                    Here is your account information:
-                    Username: %s
-                    Password: %s
-                    Email: %s
-                    """;
-
-            String context = String.format(template, user.getUsername(), user.getPassword(), user.getEmail());
-            emailSenderService.sendEmail(user.getEmail(), "Welcome to our website", context);
-        }
-
-        return ResponseEntity.ok(user);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable long id, @ModelAttribute @Valid UserDto userDto) throws IOException {
-        return ResponseEntity.ok(userService.updateUser(id, userDto));
-    }
-
-    @PutMapping("/reset-password")
-    public ResponseEntity<UserDto> resetPassword(@RequestBody String email) throws IOException {
-        UserDto user = userService.resetPassword(email);
-
-        if (user != null) {
-            String template = """
-                    Your password has been reset
-                    Here is your new password:
-                    Password: %s
-                    """;
-
-            String context = String.format(template, user.getPassword());
-            emailSenderService.sendEmail(user.getEmail(), "Reset password", context);
-        }
-
-        return ResponseEntity.ok(user);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable long id) throws IOException {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
 }

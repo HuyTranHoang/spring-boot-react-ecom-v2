@@ -97,7 +97,11 @@ const catalogSlice = createSlice({
   reducers: {
     setProductParams: (state, action) => {
       state.productLoaded = false
-      state.productParams = {...state.productParams, ...action.payload};
+      state.productParams = { ...state.productParams, ...action.payload }
+    },
+    setPageNumber: (state, action) => {
+      state.productLoaded = false
+      state.productParams.pageNumber = action.payload
     },
     resetProductParams: (state) => {
       state.productLoaded = false
@@ -146,7 +150,7 @@ const catalogSlice = createSlice({
 })
 
 export default catalogSlice.reducer
-export const { setProductParams, resetProductParams } = catalogSlice.actions
+export const { setProductParams, resetProductParams, setPageNumber } = catalogSlice.actions
 export const { selectAll: selectAllProducts } = productAdapter.getSelectors((state: IRootState) => state.catalog)
 export const selectProductById = (state: IRootState, productId: number) =>
   productAdapter.getSelectors().selectById(state.catalog, productId)

@@ -51,15 +51,41 @@ VALUES ('Superman: Action Comics Volume 5: The House of Kentn',
         'Created with the beginner in mind, this powerful bundle delves into the fundamentals behind Python and machine learning, from basic code and mathematical formulas to complex neural networks and ensemble modeling. Inside, you’ll discover everything you need to know to get started with Python and machine learning and begin your journey to success!',
         'BOOK-PROGRAMMING-1011.jpg', 100, 35.01, NOW(), 4, 'Samuel Hack');
 
-INSERT INTO role (name)
-VALUES ('ROLE_USER'),
-       ('ROLE_MANAGER'),
-       ('ROLE_ADMIN');
-
-INSERT INTO user (last_name, first_name, username, email, password, avatar, is_active, is_locked)
-VALUES ('Tran', 'Huy', 'huytran', 'huy@gmail.com', 'password', 'default.jpg', 1, 0);
-
+INSERT INTO authority (id, privilege)
+VALUES (1, 'user:read'),
+       (2, 'user:update'),
+       (3, 'user:create'),
+       (4, 'user:delete');
+INSERT INTO role (id, name)
+VALUES (1, 'ROLE_USER'),
+       (2, 'ROLE_ADMIN');
+INSERT INTO role_authority (role_id, authority_id)
+VALUES (1, 1),
+       (2, 1),
+       (2, 2),
+       (2, 3),
+       (2, 4);
+INSERT INTO user (id, user_id, first_name, last_name, username, password, email, profile_image_url, last_login_date,
+                  last_login_date_display, join_date, is_active, is_not_locked)
+VALUES (1, '1295754587', 'user', 'test', 'user@email.com',
+        '$2a$12$F8GVSAuRgy0XLa3zlPKWz.pI5xy6GB2O4YgePVQsLErrFpeogEdwe', 'user@email.com',
+        'http://localhost:8080/api/user/image/profile/user@email.com', now(), now(), now(), 1, 1),
+       (2, '8511568502', 'admin', 'test', 'admin@email.com',
+        '$2a$12$F8GVSAuRgy0XLa3zlPKWz.pI5xy6GB2O4YgePVQsLErrFpeogEdwe', 'admin@email.com',
+        'http://localhost:8080/api/user/image/profile/admin@email.com', now(), now(), now(), 1, 1),
+       (3, '8511568502', 'ray', 'le', 'ray@email.com', '$2a$12$F8GVSAuRgy0XLa3zlPKWz.pI5xy6GB2O4YgePVQsLErrFpeogEdwe',
+        'ray@email.com', 'http://localhost:8080/api/user/image/profile/ray@email.com', now(), now(), now(), 1, 1);
+INSERT INTO user_authority (user_id, authority_id)
+VALUES (1, 1),
+       (2, 1),
+       (2, 2),
+       (2, 3),
+       (2, 4),
+       (3, 1),
+       (3, 2),
+       (3, 3),
+       (3, 4);
 INSERT INTO user_role (user_id, role_id)
 VALUES (1, 1),
-       (1, 2),
-       (1, 3);
+       (2, 2),
+       (3, 2);

@@ -1,11 +1,10 @@
 package com.huy.api.role;
 
-import com.huy.api.user.User;
+import com.huy.api.authority.Authority;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -15,12 +14,18 @@ import java.util.List;
 @Entity
 @Table(name = "role")
 public class Role {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "role_authority",
+            joinColumns = @JoinColumn(name = "role_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id")
+    )
+    private List<Authority> authorities;
 }
