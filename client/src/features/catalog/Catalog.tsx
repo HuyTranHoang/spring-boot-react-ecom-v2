@@ -8,7 +8,6 @@ import {
   fetchProductThunk,
   selectAllProducts,
   selectCatalogStatus, setPageNumber,
-  setProductParams
 } from './catalogSlice.ts'
 import { useSelector } from 'react-redux'
 import CatalogFilter from './CatalogFilter.tsx'
