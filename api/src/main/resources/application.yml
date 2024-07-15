@@ -30,3 +30,6 @@ spring:
 server:
   error.include-stacktrace: never
 
+jwt
+  secret: superSerectJwt1234567890!@#$%^&*()_+superSerectJwt1234567890!@#$%^&*()_+
+
