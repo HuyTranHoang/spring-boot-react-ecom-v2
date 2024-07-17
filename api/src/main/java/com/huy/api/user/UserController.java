@@ -21,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +37,13 @@ public class UserController {
     public UserController(UserService userService, UserRepository userRepository, UserRepository userRepository1) {
         this.userService = userService;
         this.userRepository = userRepository1;
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody User user) throws CustomRuntimeException {
+        validateNewUsernameAndEmail(StringUtils.EMPTY, user.getUsername(), user.getEmail());
+        User newUser = userService.register(user);
+        return ResponseEntity.ok(newUser);
     }
 
     @PostMapping("/add")
@@ -56,7 +65,7 @@ public class UserController {
         user.setActive(Boolean.parseBoolean(isActive));
         user.setNotLocked(Boolean.parseBoolean(isNonLocked));
         User newUser = userService.addNewUser(user, role.toArray(new String[0]), profileImage);
-        return new ResponseEntity<>(newUser, HttpStatus.OK);
+        return ResponseEntity.ok(newUser);
     }
 
     @PostMapping("/update")
@@ -78,7 +87,7 @@ public class UserController {
         currentUser.setActive(Boolean.parseBoolean(isActive));
         currentUser.setNotLocked(Boolean.parseBoolean(isNonLocked));
         User updatedUser = userService.updateUser(currentUser, role.toArray(new String[0]), profileImage);
-        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+        return ResponseEntity.ok(updatedUser);
     }
 
 
@@ -152,12 +161,12 @@ public class UserController {
         response.put("users", users);
         response.put("page", myPage);
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/resetpassword/{email}")
     public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws CustomRuntimeException {
-        /// userService.resetPassword(email);
+        userService.resetPassword(email);
         return new ResponseEntity<>(
                 new HttpResponse(
                         HttpStatus.OK.value(),
@@ -167,6 +176,7 @@ public class UserController {
                 HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('user:delete')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("id") Long id) throws CustomRuntimeException, IOException {
         userService.deleteUser(id);
@@ -177,5 +187,13 @@ public class UserController {
                         HttpStatus.NO_CONTENT.getReasonPhrase(),
                         "User has been deleted successfully"),
                 HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/updateProfileImage")
+    public ResponseEntity<User> updateProfileImage(@RequestParam(value = "profileImage") MultipartFile profileImage) throws CustomRuntimeException, IOException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findUserByUsername(username);
+        User updatedUser = userService.updateProfileImage(user, profileImage);
+        return ResponseEntity.ok(updatedUser);
     }
 }

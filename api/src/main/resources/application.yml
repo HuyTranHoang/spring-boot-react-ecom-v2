@@ -5,7 +5,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
-    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
+#    properties.hibernate.dialect: org.hibernate.dialect.MySQLDialect
     hibernate.ddl-auto: none
   sql:
     init.mode: always
@@ -30,6 +30,6 @@ spring:
 server:
   error.include-stacktrace: never
 
-jwt
+jwt:
   secret: superSerectJwt1234567890!@#$%^&*()_+superSerectJwt1234567890!@#$%^&*()_+
 

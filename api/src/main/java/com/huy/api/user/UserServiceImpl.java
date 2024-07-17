@@ -9,11 +9,11 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,21 +37,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final EmailSenderService emailSenderService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailSenderService emailSenderService) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailSenderService emailSenderService, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailSenderService = emailSenderService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public User addNewUser(User user, String[] role, MultipartFile profileImage) throws IOException {
         String password = RandomStringUtils.randomAlphabetic(10);
+        String encodedPassword = passwordEncoder.encode(password);
 
         user.setUserId(RandomStringUtils.randomNumeric(10));
         user.setJoinDate(new Date());
-        user.setPassword(password);
+        user.setPassword(encodedPassword);
 
         user.setRoles(Arrays.stream(role)
                 .map(roleRepository::findRoleByName)
@@ -91,7 +93,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .path(FileConstant.USER_IMAGE_PATH + user.getUsername() + File.separator
                             + user.getUsername() + ".jpg").toUriString());
             userRepository.save(user);
-            LOGGER.info("Save file in file system by name: " + profileImage.getOriginalFilename());
+            LOGGER.info("Save file in file system by name: {}", profileImage.getOriginalFilename());
         }
     }
 
@@ -117,7 +119,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new CustomRuntimeException("No user found for the email: " + email);
 
         String password = RandomStringUtils.randomAlphabetic(10);
-        user.setPassword(password);
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
         userRepository.save(user);
         LOGGER.info("Reset password: {}", password);
         emailSenderService.sendEmail(user.getEmail(),
@@ -134,6 +137,44 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Path userFolder = Paths.get(FileConstant.USER_FOLDER + user.getUsername()).toAbsolutePath().normalize();
         FileUtils.deleteDirectory(new File(userFolder.toString()));
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User register(User user) {
+        String password = RandomStringUtils.randomAlphabetic(10);
+        String encodedPassword = passwordEncoder.encode(password);
+
+        user.setUserId(RandomStringUtils.randomNumeric(10));
+        user.setActive(true);
+        user.setNotLocked(true);
+        user.setJoinDate(new Date());
+        user.setPassword(encodedPassword);
+
+        user.setRoles(Arrays.stream(new String[]{"ROLE_USER"})
+                .map(roleRepository::findRoleByName)
+                .toList()
+        );
+
+        user.setAuthorities(Arrays.stream(new String[]{"ROLE_USER"})
+                .map(roleRepository::findRoleByName)
+                .flatMap(ro -> ro.getAuthorities().stream())
+                .distinct()
+                .toList()
+        );
+
+        user.setProfileImageUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(FileConstant.DEFAULT_USER_IMAGE_PATH + user.getUsername()).toUriString());
+
+        userRepository.save(user);
+
+        LOGGER.info("Random password: {}", password);
+        return user;
+    }
+
+    @Override
+    public User updateProfileImage(User user, MultipartFile profileImage) throws CustomRuntimeException, IOException {
+        saveProfileImage(user, profileImage);
+        return user;
     }
 
     @Override

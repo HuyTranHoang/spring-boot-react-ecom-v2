@@ -20,7 +20,7 @@ public class SecurityConstant {
     };
 
     public static final String[] API_PUBLIC_GET_URLS = {
-            "/api/product/**",
+            "/api/products/**",
             "/api/file/image/**"
     };
 
