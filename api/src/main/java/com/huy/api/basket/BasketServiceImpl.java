@@ -46,7 +46,7 @@ public class BasketServiceImpl implements BasketService {
             return toBasketDto(basket);
         }
 
-        if (isTempBasketEmpty) {
+        if (isTempBasketEmpty && !cookieBuyerId.equals(loggedInUsername)) {
             return toBasketDto(userBasket);
         }
 
