@@ -1,5 +1,6 @@
 package com.huy.api.user;
 
+import com.huy.api.common.cache.LoginAttemptService;
 import com.huy.api.common.constant.FileConstant;
 import com.huy.api.common.email.EmailSenderService;
 import com.huy.api.common.exception.CustomRuntimeException;
@@ -10,6 +11,7 @@ import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,12 +40,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final RoleRepository roleRepository;
     private final EmailSenderService emailSenderService;
     private final PasswordEncoder passwordEncoder;
+    private final LoginAttemptService loginAttemptService;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailSenderService emailSenderService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, EmailSenderService emailSenderService, PasswordEncoder passwordEncoder, LoginAttemptService loginAttemptService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.emailSenderService = emailSenderService;
         this.passwordEncoder = passwordEncoder;
+        this.loginAttemptService = loginAttemptService;
     }
 
     @Override
@@ -186,6 +190,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
 
+        if (user.isNotLocked()) {
+            if (loginAttemptService.hasExceededMaxAttempts(username)) {
+                LOGGER.error("User account is locked 1");
+                user.setNotLocked(false);
+            } else {
+                user.setNotLocked(true);
+            }
+        } else {
+            loginAttemptService.evictUserFromLoginAttemptCache(username);
+            LOGGER.error("User account is locked 2");
+            throw new AccessDeniedException("User account is locked");
+        }
         user.setLastLoginDateDisplay(user.getLastLoginDate());
         user.setLastLoginDate(new Date());
         userRepository.save(user);
